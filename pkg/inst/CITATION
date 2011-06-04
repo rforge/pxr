@@ -1,0 +1,16 @@
+citHeader("To cite package 'pxR' in publications use:")
+     
+if(!exists("meta") || is.null(meta)) meta <- packageDescription("pxR")
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
+vers <- paste("R package version", meta$Version)
+     
+citEntry(entry="Manual",
+              title = "pxR: XXXXXXXXXXXXXXX.",
+              author = personList(as.person("XXXXXXXXX")),
+              year = year,
+              note = vers,
+              textVersion =
+              paste("XXXXXXXXXXX(", 
+                    year,
+                    "). pxR: XXXXXXXXXXXXXXXXXXXX. ",
+                    vers, ".", sep=""))

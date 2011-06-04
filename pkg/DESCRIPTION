@@ -1,0 +1,14 @@
+Package: pxR
+Type: Package
+Title: 
+Version: 
+Date: 
+Encoding: UTF-8
+Author: 
+Maintainer: 
+Description: 
+URL: 
+License: GPL-3
+LazyLoad: yes
+LazyData: yes
+Depends: 
