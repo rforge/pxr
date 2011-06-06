@@ -1,13 +1,13 @@
 Package: pxR
 Type: Package
-Title: 
-Version: 
-Date: 
+Title: asdfadsf
+Version: 0.01
+Date: 06/06/2011
 Encoding: UTF-8
-Author: 
-Maintainer: 
-Description: 
-URL: 
+Author: adfadsf
+Maintainer: "alguien perez" <alguien.perez@ejemplo.com>
+Description: adfadsf
+URL: http://pxr.r-forge.r-project.org/
 License: GPL-3
 LazyLoad: yes
 LazyData: yes

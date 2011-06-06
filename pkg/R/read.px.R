@@ -72,18 +72,17 @@ read.px <- function (file, sourceEncoding='CP437', targetEncoding='latin1')
   }
   # Rellena las categorias de cada variable
   for (i in px.c) {
-     strsplit(i,"=")[[1]][1]->cab
-     strsplit(i,"=")[[1]][2]->col
-     if (substr(cab,1,6)=="VALUES") {
-     	 var<-gsub("\"","",strsplit(cab,"\\(\"|\"\\)")[[1]][2])
-     	 val<-gsub("\"","",strsplit(col,"\", +|\",")[[1]])
-     	 listcat[[var]]<-val
-     }
-     if (substr(cab,1,5)=="CODES") {
-     	 var<-gsub("\"","",strsplit(cab,"\\(\"|\"\\)")[[1]][2])
-     	 val<-gsub("\"","",strsplit(col,"\", +|\",")[[1]])
-     	 listcod[[var]]<-val
-     }
+
+     strsplit( i, "=" )[[1]][1] -> cab
+     strsplit( i, "=" )[[1]][2] -> col
+
+     var <- gsub( "\"", "", strsplit( cab, "\\(\"|\"\\)")[[1]][2] )
+     val <- gsub( "\"", "", strsplit( col, "\", +|\",")[[1]] )
+
+     if (substr(cab,1,6)=="VALUES") 
+     	 listcat[[var]] <- val
+     if (substr(cab,1,5)=="CODES") 
+     	 listcod[[var]] <- val
   }
   # attributes(listcat)
 
