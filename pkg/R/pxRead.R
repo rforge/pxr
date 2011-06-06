@@ -1,4 +1,4 @@
-px.read<- function (NameFile)
+read.px <- function (file, sourceEncoding='CP437', targetEncoding='latin1')
 #   Lee un fichero de pc-axis: "*.px"
 #   y lo introduce en una estructura de tipos px
 #   --------- Definición de un objeto de tipo "px"-----------------
@@ -6,7 +6,7 @@ px.read<- function (NameFile)
 #     variables y categorias
 #     px$var  -> lista con nombres de variables
 {
-  # NameFile="41.px"
+  # file="41.px"
   ## Declara variable a usar en la rutina  --
   px   <-list()   ## almacena  el objeto tipo px, que devolvera la rutina
   zz   <-NULL   ## Puntero de fichero
@@ -16,7 +16,7 @@ px.read<- function (NameFile)
   NamesVar=c()  ## Contendra los nombres de las varibles
   a    <-NULL   ## Variable de trabajo almacena array
   ## ----
-  zz<-file(NameFile,"rt")
+  zz<-file(file,"rt")
   # Lee cabecera del fichero px: Hasta linea de DATA=
   px.c<-c() # Contiene la cabecera del fichero "px"
   px.dat<-c() # Contiene la parte con los datos del fichero "px"
@@ -55,9 +55,13 @@ px.read<- function (NameFile)
      	px[[cab]]=gsub("\"","",col)
         }
   }
-   oem2ansi(NamesVar)->NamesVar
-  for (i in 1:length(px)) { if (!is.ansi) { px[[i]]<-oem2ansi(px[[i]]) }}
-  for (i in 1:length(px.c)) if (!is.ansi) { px.c[[i]]<-oem2ansi(px.c[[i]]) }
+   ##oem2ansi(NamesVar)->NamesVar
+  NamesVar <- iconv(NamesVar, sourceEncoding, targetEncoding)
+  ## for (i in 1:length(px)) { if (!is.ansi) { px[[i]]<-oem2ansi(px[[i]]) }}
+  ## for (i in 1:length(px.c)) if (!is.ansi) { px.c[[i]]<-oem2ansi(px.c[[i]]) }
+  for (i in 1:length(px)) { if (!is.ansi) { px[[i]]<-iconv(px[[i]], sourceEncoding, targetEncoding)}}
+  for (i in 1:length(px.c)) if (!is.ansi) { px.c[[i]]<-iconv(px.c[[i]], sourceEncoding, targetEncoding) }
+  
   # ... gsub("\"","",NamesVar)->NamesVar
   # Variables a incluir en la matriz
   listcat=list()  # Contendra las categorias de cada variable
@@ -83,7 +87,7 @@ px.read<- function (NameFile)
   }
   # attributes(listcat)
 
-  # a<-scan(pipe(paste("d:/ut/gawk   \"{gsub(/;/,NADA); if(length($0)>2) print}\"", NameFile)),
+  # a<-scan(pipe(paste("d:/ut/gawk   \"{gsub(/;/,NADA); if(length($0)>2) print}\"", file)),
   #        skip = nl+1, quiet= TRUE,na.strings =c("\"..\"",";"),dec=".",sep="")
 
   # continua leyendo a partir de DATA=

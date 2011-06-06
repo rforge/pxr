@@ -21,7 +21,7 @@ px.write.ob<- function (data,file="",ANSI=TRUE,
 
 #################################
 #################################
-px.write<- function (data,
+write.px<- function (x,
                      file="",
                      title="Sin titulo",
                      contens="tipo contenido",
@@ -39,31 +39,31 @@ px.write<- function (data,
 {
   # -------------------------------------------------
   # -- cambia 1º por 2º dim
-  dc<-attr(data,"dimcodes")
-  dd<-1:length(dim(data)) ;  dd[1:2]<-dd[c(2:1)]
-  aperm(data,dd)->data
+  dc<-attr(x,"dimcodes")
+  dd<-1:length(dim(x)) ;  dd[1:2]<-dd[c(2:1)]
+  aperm(x,dd)->x
   # -------------------------------------------------
   cat(paste("CHARSET=\"",ifelse(ANSI,"ANSI","OEM"), "\";\n",sep=""),file=file)
   cat("AXIS-VERSION=\"2000\";\n",file=file,append=T,sep="")
   cat("SUBJECT-AREA=\"",subjectarea,"\";\n",file=file,append=T,sep="")
   cat("SUBJECT-CODE=\"",subjectcode,"\";\n",file=file,append=T,sep="")
   cat(paste("MATRIX=\"",  strsplit(basename(file),"\\.")[[1]][1],"\";\n",sep=""),file=file,append=T)
-  cat(paste("TITLE=\"",title,"\"\n\"por ",paste(names(dimnames(data)),collapse = ", "),"\";\n",
+  cat(paste("TITLE=\"",title,"\"\n\"por ",paste(names(dimnames(x)),collapse = ", "),"\";\n",
             sep=""),file=file,append=T)
   cat(paste("CONTENTS=\"",contens,"\";\n",sep=""),file=file,append=T)
-  cat(paste("STUB=\"",paste(rev(names(dimnames(data))[-1]),collapse="\",\""),"\";\n",sep=""),file=file,append=T)
-  cat(paste("HEADING=\"",names(dimnames(data))[1],"\";\n",sep=""),
+  cat(paste("STUB=\"",paste(rev(names(dimnames(x))[-1]),collapse="\",\""),"\";\n",sep=""),file=file,append=T)
+  cat(paste("HEADING=\"",names(dimnames(x))[1],"\";\n",sep=""),
       file=file,append=T)
 
-  for (n in (length(dim(data))):1) {
+  for (n in (length(dim(x))):1) {
      cat(
-     paste("VALUES","(\"",names(dimnames(data))[n],"\")=\"",
-           paste(dimnames(data)[[n]],collapse="\",\"",sep=""),"\";\n",sep="")
+     paste("VALUES","(\"",names(dimnames(x))[n],"\")=\"",
+           paste(dimnames(x)[[n]],collapse="\",\"",sep=""),"\";\n",sep="")
      ,file=file,append=T)
   }
   cat(paste("UNITS=\"", units,"\";\n",sep=""),file=file,append=T)
   if( !is.null(dc)) {
-    for (n in (length(dim(data))):1) {
+    for (n in (length(dim(x))):1) {
      cat(
      paste("CODES","(\"",names(dc)[n],"\")=\"",
            paste(dc[[n]],collapse="\",\"",sep=""),"\";\n",sep="")
@@ -73,12 +73,12 @@ px.write<- function (data,
   cat(paste("DECIMALS=",decimals,";\n",sep=""),file=file,append=T)
   cat(paste("SHOWDECIMALS=",showdecimals,";\n",sep=""),file=file,append=T)
   cat("DATA=\n",file=file,append=T)
-  # ancho=trunc(log10(max(data)))+decimals+1
+  # ancho=trunc(log10(max(x)))+decimals+1
   # , width=ancho
-  data<-round(data,digits=decimals)
-  # data<-(forma(data)
-  # data<-formatC(data,digits=decimals,format=format)
-  write(data,
-                file=file,ncolumns=dim(data)[1],append=T)
+  x<-round(x,digits=decimals)
+  # x<-(forma(x)
+  # x<-formatC(x,digits=decimals,format=format)
+  write(x,
+                file=file,ncolumns=dim(x)[1],append=T)
   cat(";",file=file,append=T)
 }
