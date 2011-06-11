@@ -21,24 +21,24 @@ read.px <- function( filename ) {
         clean.spaces( x )
     }
 
-    break.clean <- function( x, sep = "," ) {
-        x <- strsplit( unquote( x ), sep )[[1]]
-        clean.spaces( x ) 
+    break.clean <- function( x, sep = '\\"' ) {
+        #x <- strsplit( unquote( x ), sep )[[1]]
+
+	x <- strsplit( x, sep )[[1]]
+        x <- clean.spaces( x ) 
+	x <- x[ x != "" ]
+	x <- x[ x != "," ]
+	x
     }
 
 
     cleanDat <- function(x){
         x <- break.clean( x, " " )
-        x <- gsub( "\"..\"","NA", x )     # cambia los valores para mising ".."	## creo que es incorrecto: debería ser la 
-        x <- gsub( "\".\"" ,"NA", x )     # cambia los valores para mising "."	## expresión regular "\\.\\." para el doble punto.	
-                                            ## además, hay que tener en cuenta que puede sustituir el punto decimal!
-                                            ## igual habría que sustituir " \\.+ " por NA
+        x <- gsub( "\"..\"","NA", x )     # cambia los valores para mising ".."	## creo que es incorrecto: deber?a ser la 
+        x <- gsub( "\".\"" ,"NA", x )     # cambia los valores para mising "."	## expresi?n regular "\\.\\." para el doble punto.	
+                                            ## adem?s, hay que tener en cuenta que puede sustituir el punto decimal!
+                                            ## igual habr?a que sustituir " \\.+ " por NA
         as.numeric( x[ x != "" ] )
-    }
-
-    getVals <- function(x, dat){
-        vals <- subset( dat, label == 'VALUES' & attr == x )$value
-        break.clean( vals )
     }
 
     make.list <- function( dat, my.label ){
@@ -78,29 +78,28 @@ read.px <- function( filename ) {
 
     class( px ) <- "px"
     return( px )
-
-    # labels for variables in rows
-    stub       <- break.clean( subset( a, label == 'STUB' )$value )
-    valsStub <- lapply(stub, getVals, a)
-
-    # labels for variables in columns
-    heading    <- unquote( subset( a, label=='HEADING' )$value )
-    valsHead <- getVals(heading, a)
-
-    vals     <- rev( c(valsStub, list(valsHead)) )
-
-    result <- do.call(expand.grid, vals)
-    names(result) <- c(heading, rev(stub))
-    result$values <- dat
-
-    return( px )
-result
 }
 
-# province.numbers <- sapply( 1:52, function( x ) sprintf( "%05d", x ) )
-# province.numbers <- paste( "http://www.ine.es/pcaxisdl//t20/e245/p05/a2010/l0/", province.numbers, "001.px", sep = "" )
+get.data.px <- function( obj ){
+    names.vals      <- c( obj$HEADING$value, rev( obj$STUB$value ) )
 
-# res <- sapply( province.numbers, function( x ) read.px( url( x ) ) )
+    result          <- data.frame( do.call(expand.grid, obj$VALUES[ names.vals ] ), obj$DATA$value )
+    names( result ) <- c( names.vals, "dat" )
 
-res <- read.px( url( province.numbers[1] ) )
+    result
+}
+
+# test against some INE's PC-Axis files
+
+province.numbers <- sapply( 1:52, function( x ) sprintf( "%05d", x ) )
+province.numbers <- paste( "http://www.ine.es/pcaxisdl//t20/e245/p05/a2010/l0/", province.numbers, "001.px", sep = "" )
+
+res <- sapply( province.numbers, function( x ) get.data.px( read.px( url( x ) ) ), simplify = F )
+
+# debug( read.px )
+
+# res <- read.px( url( province.numbers[1] ) )
+
+# res.dat <- get.data.px( res )              # se puede comparar 
+                                           # contra http://www.ine.es/jaxi/tabla.do?path=/t20/e245/p05/a2010/l0/&file=00001001.px&type=pcaxis&L=0
 
