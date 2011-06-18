@@ -1,3 +1,9 @@
+export( read.px )
+
+S3method(as.data.frame, px)
+
+
+
 ##import()
 ##export()
 ##exportMethods()
