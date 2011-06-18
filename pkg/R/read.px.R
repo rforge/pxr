@@ -36,11 +36,11 @@ read.px <- function( filename ) {
     break.clean <- function( x, sep = '\\"' ) {
         #x <- strsplit( unquote( x ), sep )[[1]]
 
-	x <- strsplit( x, sep )[[1]]
+        x <- strsplit( x, sep )[[1]]
         x <- clean.spaces( x ) 
-	x <- x[ x != "" ]
-	x <- x[ x != "," ]
-	x
+        x <- x[ x != "" ]
+        x <- x[ x != "," ]
+        x
     }
 
 
