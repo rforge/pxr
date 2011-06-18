@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>R Package pxR</title>
+	<link href="http://r-forge.r-project.org/themes/rforge/styles/estilo1.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+<!-- R-Forge Logo -->
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
+<tr><td>
+<a href="/"><img src="http://r-forge.r-project.org/themes/rforge/imagesrf/logo.png" border="0" alt="R-Forge Logo" /> </a> </td> </tr>
+</table>
+
+<h2>PC-Axis and the pxR package</h2>
+
+<p><a href="http://www.scb.se/Pages/StandardNoLeftMeny____314045.aspx">PC-Axis</a> is a software family consisting of a number of programs for the Windows and Internet environment used to present statistical information. It is used by national and international institutions to publish statistical data.</p>
+
+<p>Programs in the PC-Axis family use a particular data file format (see the full <a href="http://www.scb.se/upload/PC-Axis/Support/Documents/PC-Axis_fileformat.pdf">PX-Axis data format description</a>). The pxR package provides a set of functions for reading and writing PC-Axis files. This will facilitate the analysis of statistical data to the R community.</p>
+
+<h3>Reading PC-Axis files into R</h3>
+
+<p>Function <code>read.px</code> reads a PC-Axis file from a given location and returns an object of the class <code>px</code> containing all the data and metadata in the PC-Axis file. </p>
+<p>The single most important piece of infomation with a <code>px</code> object is the data matrix, which can be extracted with function <code>as.data.frame</code>.
+<p>For instance, </p>
+
+<code><pre>
+my.px.object <- read.px( "/path/to/pc-axis/file" )
+my.px.data   <-  as.data.frame( my.px.object ) 
+</pre></code>
+
+<p>will create the data.frame <code>my.px.data</code> with the data in the corresponding PC-Axis file.</a>
+
+</body>
+</html>
+
