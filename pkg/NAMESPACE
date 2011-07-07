@@ -2,7 +2,7 @@ export( read.px )
 
 S3method(as.data.frame, px)
 S3method(summary, px)
-
+S3method(as.array, px)
 
 
 ##import()

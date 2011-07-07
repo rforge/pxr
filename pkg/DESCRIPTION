@@ -1,14 +1,19 @@
 Package: pxR
 Type: Package
 Title: pxR
-Version: 0.01
-Date: 06/07/2011
+Version: 0.02
+Date: 07/06/2011
 Encoding: UTF-8
-Author: Vicente David Canto Casasola <vicented.canto.sspa@juntadeandalucia.es>, Carlos J. Gil Bellosta" <cgb@datanalytics.com>, Oscar Perpiñan Lamigueiro <oscar.perpinan@upm.es>, Jorge Ivan Velez <jorgeivanvelez@gmail.com>, Francisco J. Viciana <franciscoj.viciana@juntadeandalucia.es>
-Maintainer: "Carlos J. Gil Bellosta" <cgb@datanalytics.com>
+Author: TBA
+Maintainer: "alguien perez" <alguien.perez@ejemplo.com>
 Description: The pxR package provides a set of functions for reading and writing PC-Axis files, used by different statistical organizations around the globe for data disemination.
 URL: http://pxr.r-forge.r-project.org/
 License: GPL-3
 LazyLoad: yes
 LazyData: yes
 Depends: 
+Repository: R-Forge
+Repository/R-Forge/Project: pxr
+Repository/R-Forge/Revision: 13
+Date/Publication: 2011-06-30 03:52:23
+Packaged: 2011-06-30 21:10:12 UTC; rforge
