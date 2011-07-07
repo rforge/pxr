@@ -3,11 +3,16 @@
 \title{as.array.px}
 \description{Converts a \code{px} object into an array.
 }
+\description{
+This function extracts the data component from a px object as a \code{array}.
+}
+
 \usage{
 \S3method{as.array}{px}(x, ...)
 }
 \arguments{
   \item{x}{A \code{px} object.}
+  \item{optional}{ Not used; ignored }  
   \item{...}{Additional arguments. Not used yet.}
 }
 \value{An array.
