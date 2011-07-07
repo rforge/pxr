@@ -10,7 +10,7 @@
 #
 #################################################################
 
-read.px <- function( filename ) {
+read.px <- function( filename , encod.from="ISO_8859-1", encod.to="UTF-8") {
 
     ## auxiliary functions ##
 
@@ -46,10 +46,19 @@ read.px <- function( filename ) {
 
     cleanDat <- function(x){
         x <- break.clean( x, " " )
-        x <- gsub( "\"..\"","NA", x )     # cambia los valores para mising ".."	## creo que es incorrecto: deber?a ser la 
-        x <- gsub( "\".\"" ,"NA", x )     # cambia los valores para mising "."	## expresi?n regular "\\.\\." para el doble punto.	
-                                            ## adem?s, hay que tener en cuenta que puede sustituir el punto decimal!
-                                            ## igual habr?a que sustituir " \\.+ " por NA
+        x <- gsub( "\"..\"","NA", x )     # cambia los valores para
+                                          # mising ".." ## creo que es
+                                          # incorrecto: deber?a ser la
+        x <- gsub( "\".\"" ,"NA", x )     # cambia los valores para
+                                          # mising "." ## expresi?n
+                                          # regular "\\.\\." para el
+                                          # doble punto.
+                                            ## adem?s, hay que tener
+                                            ## en cuenta que puede
+                                            ## sustituir el punto
+                                            ## decimal!  igual habr?a
+                                            ## que sustituir " \\.+ "
+                                            ## por NA
         as.numeric( x[ x != "" ] )
     }
 
@@ -64,8 +73,12 @@ read.px <- function( filename ) {
     ## end: auxiliary functions ##
 
     a <- scan( filename, what = "character", sep = "\n", quiet = TRUE )
-    a <- paste( a, collapse = " " )					## " " necesario para que no junte lineas en DATA
-    a <- iconv( a, "ISO_8859-1", "UTF-8")            ## just in case, on some platforms; maybe a different encoding is required
+    a <- paste( a, collapse = " " )	## " " necesario para que no
+                                        ## junte lineas en DATA
+    a <- iconv( a, from=encod.from, to=encod.to)    ## just in case, on some
+                                             ## platforms; maybe a
+                                             ## different encoding is
+                                             ## required
     a <- unlist( strsplit( a, ";") )
     a <- do.call( rbind, strsplit( a, "=" ) )
 

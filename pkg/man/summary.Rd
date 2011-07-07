@@ -3,10 +3,10 @@
 \alias{summary}
 
 \title{
-Extraction of data from px object into a data.frame
+summary.px
 }
 \description{
-This function extracts the data component from a px object as a \code{data.frame}.
+Compactly display the internal structure of a px object.
 }
 \usage{
 \method{summary}{px}( object, ... )
@@ -15,23 +15,28 @@ This function extracts the data component from a px object as a \code{data.frame
   \item{object}{ a px object }
   \item{...}{ Additional arguments, currently not used }
 }
-\details{
-TBA
-}
+% \details{
+% TBA
+% }
 \value{
 A verbose description of data and metadata within the px object.
 }
+
 \references{
-%% ~put references to the literature/web site here ~
+http://www.scb.se/upload/PC-Axis/Support/Documents/PC-Axis_fileformat.pdf
 }
+
 \author{
 Carlos J. Gil Bellosta
 }
-\note{ }
+% \note{ }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{ }
+\seealso{
+  \code{\link{read.px}}
+  \code{\link{as.data.frame.px}}
+}
 \examples{
 my.px.object <- read.px( system.file( "extdata", "example.px", package = "pxR") )
 summary( my.px.object )

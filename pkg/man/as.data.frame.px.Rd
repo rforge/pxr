@@ -9,7 +9,7 @@ Extraction of data from px object into a data.frame
 This function extracts the data component from a px object as a \code{data.frame}.
 }
 \usage{
-\method{as.data.frame}{px}( x, row.names, optional, ... )
+\S3method{as.data.frame}{px}( x, row.names, optional, ... )
 }
 \arguments{
   \item{x}{ a px object }
@@ -24,16 +24,20 @@ TBA
 A data.frame object.
 }
 \references{
-%% ~put references to the literature/web site here ~
+http://www.scb.se/upload/PC-Axis/Support/Documents/PC-Axis_fileformat.pdf
 }
 \author{
-Francisco J. Viciana Fernández
+Carlos G. Bellosta, Oscar Perpiñán Lamigueiro, Francisco J. Viciana Fernández
 }
-\note{ }
+%\note{ }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{ }
+\seealso{
+  \code{\link{read.px}},
+  \code{\link{as.array.px}}
+  }
+
 \examples{
 my.px.object <- read.px( system.file( "extdata", "example.px", package = "pxR") )
 my.px.data   <- as.data.frame( my.px.object )

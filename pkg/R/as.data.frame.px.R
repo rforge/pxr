@@ -4,7 +4,7 @@
 # Purpose:      extracts a df from a px object
 #
 # Created:      20110618
-# Authors:      TBA
+# Authors:      CGB, OPL, FVF
 #
 # Modifications: 
 #
