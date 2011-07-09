@@ -3,7 +3,7 @@
 \alias{as.data.frame}
 
 \title{
-Extraction of data from px object into a data.frame
+Extraction of data from px into data.frame objects
 }
 \description{
 This function extracts the data component from a px object as a \code{data.frame}.

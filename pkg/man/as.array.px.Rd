@@ -1,8 +1,6 @@
 \name{as.array.px}
 \alias{as.array.px}
-\title{as.array.px}
-\description{Converts a \code{px} object into an array.
-}
+\title{Extraction of data from px objects into arrays }
 \description{
 This function extracts the data component from a px object as a \code{array}.
 }
@@ -12,7 +10,6 @@ This function extracts the data component from a px object as a \code{array}.
 }
 \arguments{
   \item{x}{A \code{px} object.}
-  \item{optional}{ Not used; ignored }  
   \item{...}{Additional arguments. Not used yet.}
 }
 \value{An array.
