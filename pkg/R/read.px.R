@@ -4,7 +4,7 @@
 # Purpose:      reads a PC-Axis file into R
 #
 # Created:      20110618
-# Authors:      TBA
+# Authors:      fvf, cjgb, opl
 #
 # Modifications: 
 #

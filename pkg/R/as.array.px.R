@@ -4,15 +4,15 @@
 # Purpose:      Converts a px object to an array
 #
 # Created:      20110618
-# Authors:      FVF
+# Authors:      fvf
 #
-# Modifications: OPL 
+# Modifications: opl 
 #
 #################################################################
 
 as.array.px <- function(x,... ){
   
-    names.vals      <- c( x$HEADING$value, rev( x$STUB$value ) ) ; str(names.vals)
+    names.vals      <- c( x$HEADING$value, rev( x$STUB$value ) )##; str(names.vals)
     
     #  create array
     result <- array( x$DATA[[1]], unlist(lapply(x$VALUES[names.vals],length)), dimnames=x$VALUES[names.vals] )
