@@ -1,0 +1,281 @@
+\documentclass[10pt,twoside,spanish]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[ansinew]{inputenc}
+\usepackage[spanish,english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{epsfig}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{amssymb}
+\usepackage{epsf}
+\usepackage{graphicx}
+\usepackage{latexsym,bm}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{epsfig}
+\usepackage{longtable}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{caption}
+\usepackage[dvips,dvipsnames,usenames]{color}
+\usepackage[dvips,dvipsnames,usenames]{colortbl}
+\usepackage{setspace}
+
+%OPL: añadido
+\usepackage{hyperref}
+\hypersetup{
+    bookmarks=true,         % show bookmarks bar?
+    unicode=true,          % non-Latin characters in Acrobat’s bookmarks
+    bookmarksnumbered=false,
+    bookmarksopen=false,
+    breaklinks=true,
+    backref=true,
+    pdftoolbar=true,        % show Acrobat’s toolbar?
+    pdfmenubar=true,        % show Acrobat’s menu?
+    pdffitwindow=false,     % window fit to page when opened
+    pdfstartview={FitH},    % fits the width of the page to the window
+    %pdftitle={}
+    %pdfauthor={},     % author
+    %pdfsubject={},   % subject of the document
+    pdfcreator={AucTeX/Emacs},   % creator of the document
+    pdfproducer={LaTeX}, % producer of the document
+    %pdfkeywords={}, % list of keywords
+    pdfnewwindow=true,      % links in new window
+    pdfborder={0 0 0},
+    colorlinks=true,       % false: boxed links; true: colored links
+    linkcolor=BrickRed,          % color of internal links
+    citecolor=BrickRed,        % color of links to bibliography
+    filecolor=black,      % color of file links
+    urlcolor=Blue           % color of external links 
+}
+
+\setcounter{MaxMatrixCols}{10}
+%TCIDATA{OutputFilter=LATEX.DLL}
+%TCIDATA{Version=5.00.0.2552}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{LastRevised=Wednesday, January 21, 2009 20:03:48}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+%TCIDATA{CSTFile=article.cst}
+
+\newtheorem{theorem}{Teorema}[section]
+\newtheorem{proposition}{Proposición}[section]
+\newtheorem{lemma}{Lema}[section]
+\newtheorem{corollary}{Corolario}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{remark}{Observación}[section]
+\newtheorem{example}{Ejemplo}[section]
+\newtheorem{conclusion}{Conclusión}[section]
+\newtheorem{conjecture}{Conjetura}[section]
+\newtheorem{notation}{Notación}[section]
+\newtheorem{exercise}{Ejercicio}[section]
+\newtheorem{problem}{Problema}[section]
+\renewenvironment*{proof}[1][Demostración]{\noindent \textbf{#1.} }{\ \rule{0.5em}{0.5em}}
+\numberwithin{equation}{section}
+\renewcommand{\theequation}{\thesection.\arabic{equation}}
+\renewcommand{\thefigure}{\arabic{figure}}
+\font\gotica=eufm9 scaled\magstep2
+\font\gotsmall=eufm8
+\renewcommand{\baselinestretch}{1.1}
+\footnotesep 0.2cm
+\skip\footins 0.3cm
+\abovecaptionskip 0cm
+\belowcaptionskip -0.2cm
+\renewcommand*{\refname}{Referencias}
+\hyphenation{con-ve-nien-te te-o-re-mas}
+%%\input{tcilatex} ¿¿¿??? OPL: comentado
+
+\begin{document}
+
+\title{%
+%TCIMACRO{\TeXButton{TeX field}{\vspace*{-2cm}}}%
+%BeginExpansion
+\vspace*{-2cm}%
+%EndExpansion
+Title of the Article in English\thanks{%
+Escribir a pie de página un Título Corto si el Título (Largo) supera los 100
+caracteres contando los espacios en blanco.}%
+%TCIMACRO{\TeXButton{TeX field}{\vspace*{-0.2cm}}}%
+%BeginExpansion
+\vspace*{-0.2cm}%
+%EndExpansion
+}
+\author{Nombre y Apellidos Autor 1, Nombre y Apellidos Autor 2\thanks{%
+Corresponding Author.} \\
+%EndAName
+Centro (Departamento, Instituto de Investigación, etc.) \\
+Institución (Universidad, Empresa, etc.)\\
+E-mail Autor 1, E-mail Autor 2 \and Nombre y Apellidos Autor 3 \\
+%EndAName
+Centro (Departamento, Instituto de Investigación, etc.) \\
+Institución (Universidad, Empresa, etc.)\\
+E-mail Autor 3}
+\date{%
+%TCIMACRO{\TeXButton{Espacio negativo}{\vspace*{-1cm}}}%
+%BeginExpansion
+\vspace*{-1cm}%
+%EndExpansion
+}
+\maketitle
+
+\begin{abstract}
+This is the abstract of the article. It should be no longer than ten lines,
+and it must be written in English.\medskip
+
+\noindent \textbf{Keywords:} Keyword 1, Keyword 2, ...
+
+\noindent \textbf{AMS Subject Classifications}: 90CXX, 90CXY, ... (see
+http://www.ams.org/msc/)
+\end{abstract}
+
+%TCIMACRO{\TeXButton{Artículo en español}{\selectlanguage{spanish}}}%
+%BeginExpansion
+\selectlanguage{spanish}%
+%EndExpansion
+
+\section{Título\textbf{\ Sección}}
+
+Esto es una muestra del formato que debe ser utilizado para un artículo de
+la revista BEIO\footnote{%
+Los espacios entre párrafos y los cortes de palabras se ajustarán
+posteriormente en la edición de la revista.}.
+
+\begin{remark}
+Los artículos para la sección \emph{Opiniones sobre la Profesión} no
+necesitan Abstract, Keywords ni AMS Subject classifications. Los autores de
+esta sección deben mandar una foto personal en formato PostScript.\FRAME{%
+dtbpFU}{1.2185in}{1.4806in}{0pt}{\Qcb{{}}}{}{leibnitz.eps}{\special{language
+"Scientific Word";type "GRAPHIC";maintain-aspect-ratio TRUE;display
+"USEDEF";valid_file "F";width 1.2185in;height 1.4806in;depth
+0pt;original-width 2.6489in;original-height 3.2232in;cropleft "0";croptop
+"1";cropright "1";cropbottom "0";filename 'leibnitz.eps';file-properties
+"XNPEU";}}
+\end{remark}
+
+El artículo puede contener todo tipo de símbolos matemáticos compatibles con
+Tex. Los tamaños de las figuras deben estar ajustados adecuadamente y sus
+ficheros deberán enviarse junto con el fichero Tex principal.
+
+\FRAME{dtbpFU}{0.4912in}{0.4921in}{0pt}{\Qcb{Logotipo de la SEIO}}{}{Figure}{%
+\special{language "Scientific Word";type "GRAPHIC";maintain-aspect-ratio
+TRUE;display "USEDEF";valid_file "T";width 0.4912in;height 0.4921in;depth
+0pt;original-width 8.9802in;original-height 8.9906in;cropleft "0";croptop
+"1";cropright "1";cropbottom "0";tempfilename
+'KC88UV00.bmp';tempfile-properties "XPR";}}
+
+A continuación podemos ver el estilo de los teoremas, las proposiciones, etc.
+
+\begin{theorem}
+Enunciado del teorema:%
+\begin{equation}
+E=mc^{2}  \label{Equation 1}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+La demostración va aquí.
+\end{proof}
+
+\begin{proposition}
+Dos ecuaciones en diferentes líneas, la primera sin numerar:%
+\begin{gather}
+\Delta u=0  \notag \\
+x^{n}+y^{n}=z^{n}  \label{Equation 2b}
+\end{gather}
+\end{proposition}
+
+\subsection{Título Subsección}
+
+\begin{theorem}
+Otro teorema.
+\end{theorem}
+
+Algunos ítems:
+
+\begin{itemize}
+\item Primer ítem
+
+\item Segundo ítem
+
+\begin{itemize}
+\item Ítem 1 del segundo nivel
+
+\item Ítem 2 del segundo nivel
+\end{itemize}
+\end{itemize}
+
+Algunos ítems numerados:
+
+\begin{enumerate}
+\item Enumeración 1
+
+\begin{enumerate}
+\item Enumeración 1 del segundo nivel
+\end{enumerate}
+\end{enumerate}
+
+\section{Título Sección\label{Sec 2}}
+
+\subsection{Título Subsección}
+
+\begin{lemma}
+Enunciado del lema:%
+\begin{equation}
+a\leq b~\wedge ~b\leq c\Rightarrow a\leq c  \label{Propiedad transitiva}
+\end{equation}
+\end{lemma}
+
+\section{Acerca de las referencias}
+
+Las referencias en el texto se deben citar por los apellidos de los autores
+seguidos del año de publicación entre paréntesis. Algunos ejemplos:
+
+En Apellido Autor 1 (2000) se estudia ...
+
+El concepto está definido en Apellido Autor 2 y Apellido Autor 3 (2001).
+
+Este tema ha sido estudiado ampliamente en Apellido Autor 1 (2000), Apellido
+Autor 2 y Apellido Autor 3 (2001), Apellido Autor 4 et al. (2002).
+
+La lista de referencias sólo debe incluir trabajos que están citados en el
+texto y que han sido publicados o aceptados para su publicación. Las
+comunicaciones personales y los trabajos no publicados sólo se deben
+mencionar en el texto. No utilizar notas al pie para sustituir una lista de
+referencias.
+
+La lista de referencias debe ser ordenada alfabéticamente por los apellidos
+del primer autor de cada trabajo.
+
+Utilizar siempre la abreviatura del nombre de la revista de acuerdo al ISSN
+List of Title Word Abbreviations, véase www.issn.org/2-22661-LTWA-online.php
+
+\begin{thebibliography}{9}
+\bibitem{Etiqueta 1} Apellido seguido de inicial del nombre. (Año). Nombre
+del artículo. \emph{Nombre de la revista abreviado}, \textbf{Número del
+Volumen}, Numero de la página inicial-Número de la página final.
+
+\bibitem{Etiqueta 2} Apellido2 N2., y Apellido3 N3. (Año). \emph{Nombre del
+Libro con Iniciales en Mayúsculas}, Editorial, Ciudad de Publicación (País).
+
+\bibitem{Etiqueta 3} Apellido4 N4., Apellido5 N5., y Apellido6 N6. (Año). Cap%
+ítulo de libro. En: \emph{Nombre del Libro con Iniciales en Mayúsculas},
+Editorial, Ciudad de Publicación (País).
+
+\bibitem{Etiqueta 4} Apellido7 N7., Apellido8 N8., Apellido9 N9., et al. (Añ%
+o). Nombre del artículo publicado por DOI. \emph{Nombre de la revista
+abreviado}, Doi: Número de Doi.
+
+\bibitem{Etiqueta 5} Apellido seguido de inicial del nombre. (Año). Nombre
+del documento online. En: www.WebPage.com
+\end{thebibliography}
+
+%TCIMACRO{%
+%\TeXButton{Acerca de los autores}{\subsection*{Acerca de los autores}}}%
+%BeginExpansion
+\subsection*{Acerca de los autores}%
+%EndExpansion
+
+Breve CV (máximo 10 líneas) por autor.
+
+\textbf{Autor 1} es profesor en ... y sus líneas de investigación son ...
+
+\end{document}
