@@ -1,7 +1,7 @@
 Package: pxR
 Type: Package
 Title: PC-Axis with R
-Version: 0.02
+Version: 0.20
 Date: 2011-07-11
 Encoding: UTF-8
 Author: Francisco J. Viciana, Carlos J. Gil Bellosta, Oscar Perpiñán Lamigueiro, Vicente David Canto Casasola, Jorge Iván Vélez.
