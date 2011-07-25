@@ -27,3 +27,4 @@ my.px.data   <- as.array( my.px.object )
 }
 \author{Francisco J. Viciana Fernández}
 \keyword{manip}
+
