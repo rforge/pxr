@@ -1,7 +1,7 @@
 #################################################################
 # 
-# File:         read.px.R
-# Purpose:       Write  a objest of class 'px' to a PC-Axis file 
+# File:         write.px.R
+# Purpose:      Write an object of class 'px' to a PC-Axis file 
 #
 # Created:      20110618
 # Authors:      fvf, cjgb, opl
@@ -11,11 +11,11 @@
 #################################################################
 
 
-write.px<- function (obj.px , filename , encod="ISO_8859-1")
+write.px <- function ( obj.px, filename, encod = "ISO_8859-1" )
 {
 
- if (class(obj.px)[1] != 'px')
-   { return('Error: object does not have the right "class"') }
+ if ( ! inherits( obj.px, "px" ) )
+   stop('Error: object does not have the right "class"')
  
   ## auxiliary functions ## 
   unquote <- function( x ){
@@ -25,7 +25,7 @@ write.px<- function (obj.px , filename , encod="ISO_8859-1")
   
   con <- file( description = filename, open = "w", encoding = encod )
 
- wf  <- function ( lchart ) {
+  wf  <- function ( lchart ) {
           cat(paste(lchart,sep='', collapse =''), file=con) }
   
   # modify px objects 
