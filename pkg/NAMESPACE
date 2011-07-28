@@ -1,5 +1,6 @@
 export( read.px )
 export( write.px )
+export( as.px.array )
 
 S3method(as.data.frame, px)
 S3method(summary, px)
