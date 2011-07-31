@@ -41,28 +41,38 @@ write.px <- function ( obj.px, filename, encod = "ISO_8859-1" )
   for (i in  names(lcell)[names(lcell) != 'DATA'])
     {
       if (length(i)==1 & lcell[[i]][1] == 'value') {
-         # field meta without second name lees DATA 
+         # Key without  variable name 
          zz <- paste(obj.px[[i]]$value,collapse='","')
-         zz <- unquote(zz)
-         wf(c(i,'="',zz,'";\n'))
+         zz <- unquote(zz)         
+         if (i %in% c('DECIMALS','SHOWDECIMALS','ELIMINATION')) # values without quote
+                                                       # falla lectura PC-AXIS con comillas
+          {      wf( c(i,'=' , zz ,';\n')  )        
+          } else wf( c(i,'="', zz ,'";\n'))          
          } else # meta with second name. Can be more one
          { for (l in names(obj.px[[i]]))
             {
-              wf ( c(i,'("',l,'")=\"') )
+              if (i %in% c('KEYS')) # values without quote
+                {      wf ( c(i,'("',l,'")=') )
+                } else wf ( c(i,'("',l,'")=\"') )              
               wf ( paste(obj.px[[i]][[l]],collapse='","') )
-              wf ( '";\n' )
+              if (i %in% c('KEYS')) # values without quote
+              { wf ( ';\n' ) } else wf ( '";\n' )              
             }
          }     
     }
   # write DATA
   zz <- as.array( obj.px )
-  n  <- length( length(dim(zz)) )
-  if ( n>2 ) # -- change first to second dim
-  {
-    dd<-(1:n) ;  dd[1:2]<-dd[c(2:1)]
-    aperm(zz,dd)->zz
-  }
+  ### Innecesario ---
+  # n  <- length( length(dim(zz)) ) # Nunca mayor de 2
+  # if ( n>2 ) # -- change first to second dim
+  # {
+  #   dd<-(1:n) ;  dd[1:2]<-dd[c(2:1)]
+  #  aperm(zz,dd)->zz
+  # }
   wf ('DATA=\n')
+  ## Hay que multiplicar po 10^DECIMAL ??? 
+  formatC(zz)->zz
+  zz[zz=='NA']<-'".."'
   write ( zz, file=con, ncolumns=dim(zz)[1], append=T )
   cat   (";", file=con, append=T)
   close ( con )

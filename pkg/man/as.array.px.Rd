@@ -22,9 +22,9 @@ http://www.scb.se/upload/PC-Axis/Support/Documents/PC-Axis_fileformat.pdf
   \code{\link{as.data.frame.px}}
 }
 \examples{
-my.px.object <- read.px( system.file( "extdata", "example.px", package = "pxR") )
-my.px.data   <- as.array( my.px.object )
+my.px     <- read.px( system.file( "extdata", "example.px", package = "pxR"))
+my.array  <- as.array( my.px )
 }
-\author{Francisco J. Viciana Fernández}
+\author{Francisco J. Viciana}
 \keyword{manip}
 
