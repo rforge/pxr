@@ -7,7 +7,7 @@ Reads a PC-Axis file
 This function reads a PC-AXIS file (a text file with certain format) and creates an object of the class px.
 }
 \usage{
-read.px( filename, encod.from="ISO_8859-1", encod.to="UTF-8")
+read.px( filename, encod.from = "ISO_8859-1", encod.to = "UTF-8")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

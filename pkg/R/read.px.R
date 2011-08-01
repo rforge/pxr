@@ -10,7 +10,7 @@
 #
 #################################################################
 
-read.px <- function( filename , encod.from="ISO_8859-1", encod.to="UTF-8") {
+read.px <- function( filename , encod.from = "ISO_8859-1", encod.to = "UTF-8") {
 
     ## auxiliary functions ##
 
