@@ -81,7 +81,31 @@ as.px.array  <- function (obj.array,skeleton.px=NULL,list.keys=NULL  )
   
 }
 
-### example
+# ### example
+# oo  <- read.px(  system.file( "extdata", "example.px", package = "pxR"))
+# aa  <- as.array(oo)
+# as.px.array(aa)->px.aa1
+# as.px.array(aa,skeleton.px=oo )->px.aa2
+# as.array(px.aa1)->aa1
+# str(aa) ; str (aa1)
+# 
+# ### export data checks
+# sum(as.array(aa)-as.array(px.aa1))
+# sum(as.array(aa)-as.array(px.aa2))
+# 
+# ### Checks writing for missing data
+# oo  <- read.px(  system.file( "extdata", "example2.px", package = "pxR"))
+# aa  <-  as.array(oo)
+# aa[sample(1:length(aa),5)]<-NA
+# write.px(as.px.array(aa),file='tmp01.px')
+# 
+# ### append and modify keys
+# write.px(as.px.array(aa,skeleton.px=oo),file='tmp02.px')
+# write.px(as.px.array(aa,
+#              list.keys= list(MATRIX='xxx', CONTENTS='new data',
+#                              NEWKEY='an other key',
+#                              UNITS='people', TITLE='My Title') 
+#                      ),file='tmp03.px')
 oo  <- read.px(  system.file( "extdata", "example.px", package = "pxR"))
 aa  <- as.array(oo)
 as.px.array(aa)->px.aa1
