@@ -3,7 +3,7 @@
 # File:         as.data.frame.px.R 
 # Purpose:      extracts a df from a px object
 #
-# Created:      20110618
+# Created:      20110801
 # Authors:      cjgb, opl, fvf
 #
 # Modifications: 
@@ -11,7 +11,7 @@
 #################################################################
 
 as.data.frame.px <- function( x, row.names, optional,... ){
-    names.vals      <- c( x$HEADING$value, rev( x$STUB$value ) )
+    names.vals      <- c( rev(x$HEADING$value), rev( x$STUB$value ) )
 
     result          <- data.frame( do.call(expand.grid, x$VALUES[ names.vals ] ), x$DATA$value )
     names( result ) <- c( names.vals, "dat" )
