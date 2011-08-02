@@ -28,6 +28,9 @@ as.px.array  <- function ( x, skeleton.px = NULL, list.keys = NULL, ...  )
 #                 UNITS='personas', TITLE='titulos', DECIMAL='1') -> list.keys  
 {
 
+  if ( ! inherits(x , "array" ) )
+  stop('Error: object is not a "array"')
+ 
   mkl1<- function (name,value)         {           
               zz <- list( list(value=value) ) 
               names( zz )  <- name
@@ -49,7 +52,7 @@ as.px.array  <- function ( x, skeleton.px = NULL, list.keys = NULL, ...  )
     } else {  opx <- skeleton.px   }
 
   
- ## Añade pares (key,value) al objeto px, si especificadas.
+ ## Add key-value pair if list.keys<>NULL
  if (! is.null(list.keys)) {    
     for (i in names(list.keys)) {
        # If there is key replaces it.
