@@ -17,7 +17,7 @@
 
 \usage{
 as.px( x, ... )
-\S3method{as.px}{array}( x, skeleton.px = NULL, list.keys = NULL  )
+\S3method{as.px}{array}( x, skeleton.px = NULL, list.keys = NULL, ...  )
 }
 
 \arguments{
