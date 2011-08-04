@@ -76,8 +76,8 @@ as.px.array  <- function ( x, skeleton.px = NULL, list.keys = NULL, ...  )
              
      } else mkl1( 'STUB'   , rev(names(dimnames(x)) )) # Only one dim
 
- opx <- c( opx, list( 'VALUES' = dimnames(x)) )
- opx <- c( opx, list( 'DATA'   = list(value=as.vector(x)) ) )
+ opx <- c( opx, list( 'VALUES' = dimnames(x) ) )
+ opx <- c( opx, list( 'DATA'   = list( value = as.vector(x) ) ) )
  class( opx ) <- "px"
   
  return(opx)
