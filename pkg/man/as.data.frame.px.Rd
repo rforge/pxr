@@ -15,12 +15,12 @@ This function extracts the data component from a px object as a \code{data.frame
   \item{x}{ a px object }
   \item{row.names}{ Not used; ignored }
   \item{optional}{ Not used; ignored }
-  \item{use.codes}{ If true, this parameter replaces the names of the variables by their codes, if available. See details section. }
+  \item{use.codes}{ If true, this parameter replaces the names (or levels) of the variables by their codes, if available; alternatively, it can be a character vector identifying those variables for which codes will replace the levels of the variables. See details section. }
   \item{...}{ Additional arguments, currently not used }
 }
 \details{
     The PC-Axis provides two alternative mechanisms for naming variables: their values or their codes, usually less verbose.
-    Users of the package may use the \code{use.codes} parameter to use the CODES attribute in the PC-Axis file for naming the levels of the variables.
+    The the \code{use.codes} parameter can be used to select those variables for which the CODES attribute in the PC-Axis file for naming the levels of the variables.
     It should be noted that there may not be CODES for all variables; in such cases, the VALUES are used instead.
 }
 \value{
