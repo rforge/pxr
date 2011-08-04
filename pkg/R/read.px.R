@@ -19,8 +19,8 @@ read.px <- function( filename , encod.from = "ISO_8859-1", encod.to = "UTF-8") {
     }
 
     clean.spaces <- function( x ){
-        x <- gsub("^[[:space:]]+","",x) # elimina espacios en blanco por delante
-        x <- gsub("[[:space:]]+$","",x) # elimina espacios en blanco por detras
+        x <- gsub( "^[[:space:]]+", "", x ) # elimina espacios en blanco por delante
+        x <- gsub( "[[:space:]]+$", "", x ) # elimina espacios en blanco por detras
         x
     }
 
@@ -44,22 +44,28 @@ read.px <- function( filename , encod.from = "ISO_8859-1", encod.to = "UTF-8") {
     }
 
 
-    cleanDat <- function(x){
+    cleanDat <- function( x ){
         x <- break.clean( x, " " )
-        x <- gsub( "\"..\"","NA", x )     # cambia los valores para
-                                          # mising ".." ## creo que es
-                                          # incorrecto: deber?a ser la
-        x <- gsub( "\".\"" ,"NA", x )     # cambia los valores para
-                                          # mising "." ## expresi?n
-                                          # regular "\\.\\." para el
-                                          # doble punto.
-                                            ## adem?s, hay que tener
-                                            ## en cuenta que puede
-                                            ## sustituir el punto
-                                            ## decimal!  igual habr?a
-                                            ## que sustituir " \\.+ "
-                                            ## por NA
+        x <- gsub( ".*,", "", x )           # eliminates keys part in files with KEYS argument
+        x <- gsub( "\"\\.\\.\"","NA", x )
+        x <- gsub( "\"\\.\"" ,"NA", x ) 
         as.numeric( x[ x != "" ] )
+    }
+
+    get.keys <- function( x, codes, values, keys ){
+        x <- break.clean( x, " " )
+        x <- x[ grep( ",", x ) ]                # keep just components having a comma 
+        x <- unquote( x )
+        x <- do.call( rbind, sapply( x, break.clean, ",", simplify = F ) )
+        x <- data.frame( x[, -ncol( x ) ] )               # drops the data part
+        rownames( x ) <- NULL
+        colnames( x ) <- rev( names( keys ) )
+        
+        encoded.vars <- names( keys )[ keys == "CODES" ]
+        for( var.name in encoded.vars ){
+            x[[var.name]] <- values[[ var.name ]] [ match( x[[ var.name ]], codes[[ var.name ]] ) ]
+        }
+        x
     }
 
     make.list <- function( dat, my.label ){
@@ -79,7 +85,7 @@ read.px <- function( filename , encod.from = "ISO_8859-1", encod.to = "UTF-8") {
                                              ## platforms; maybe a
                                              ## different encoding is
                                              ## required
-    a <- unlist( strsplit( a, ";") )
+    a <- unlist( strsplit( a, ";", useBytes = T ) )
     a <- do.call( rbind, strsplit( a, "=" ) )
 
     a <- data.frame( cbind( get.attributes( a[, 1]), a[, 2] ) )
@@ -93,15 +99,20 @@ read.px <- function( filename , encod.from = "ISO_8859-1", encod.to = "UTF-8") {
 
     px <- sapply( unique( a$label ), function( label ) make.list( a, label ), simplify = FALSE )
 
-
     # turns data values into an R vector
-    px$DATA$value    <- cleanDat( px$DATA$value )
     px$STUB$value    <- make.names( break.clean( px$STUB$value ) )
     px$HEADING$value <- make.names( break.clean( px$HEADING$value ) )
 
     px$VALUES <- lapply( px$VALUES, break.clean )
     px$CODES  <- lapply( px$CODES, break.clean )
 
+    # only if data contains the KEYS keyword
+    # such datasets have a different data format and require an extra field to
+    # keep track of which rows are present in the data (see format document for details)
+    #if( "KEYS" %in% names( px ) )
+    #    px$internal.keys <- get.keys( px$DATA$value, px$CODES, px$VALUES, px$KEYS )
+
+    px$DATA$value    <- cleanDat( px$DATA$value )
     class( px ) <- "px"
     return( px )
 }
