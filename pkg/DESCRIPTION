@@ -5,7 +5,7 @@ Version: 0.22
 Date: 2011-08-03
 Encoding: UTF-8
 Author: Francisco J. Viciana, Carlos J. Gil Bellosta, Oscar Perpiñán Lamigueiro, Vicente David Canto Casasola, Jorge Iván Vélez.
-Author@R:c(person("Francisco J.",  "Viciana", email= "franciscoj.viciana@juntadeandalucia.es", role='aut'),
+Authors@R:c(person("Francisco J.",  "Viciana", email= "franciscoj.viciana@juntadeandalucia.es", role='aut'),
 	   person("Carlos J.", "Gil Bellosta", email="cgb@datanalytics.com", role='aut'), 
 	   person("Oscar", "Perpiñán Lamigueiro", email="oscar.perpinan@upm.es", role=c('cre', 'aut')), 
 	   person("Vicente David", "Canto Casasola", email= "vicented.canto.sspa@juntadeandalucia.es", role='aut'),
