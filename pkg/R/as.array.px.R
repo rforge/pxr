@@ -10,15 +10,28 @@
 #
 #################################################################
 
-as.array.px <- function(x,... ){
+as.array.px <- function(x, use.codes = FALSE,... ){
   
-    names.vals      <- c( rev(x$HEADING$value), rev( x$STUB$value ) )
+   names.vals      <- c( rev(x$HEADING$value), rev( x$STUB$value ) )
     
-    result <- array( x$DATA[[1]], unlist(lapply(x$VALUES[names.vals],length)),
-                                       dimnames=x$VALUES[names.vals] )
-    names( dimnames(result) ) <- names.vals
+   there.codes <- ! ( sapply(x$CODES[names.vals],is.null) )
     
-    return(result)
+   if ( is.logical( use.codes ) & use.codes == FALSE ) {
+        there.codes <- rep(FALSE,length(there.codes))  # don't use codes
+   } else if  ( is.character( use.codes ) ) {
+                 with.codes <- ! is.na(match(names.vals,use.codes))
+                 there.codes <-  with.codes & there.codes   
+     } 
+    
+   x$VALUES[names.vals][there.codes] <- x$CODES[names.vals][there.codes] 
+
+   result <- array( x$DATA[[1]],
+                    unlist( lapply( x$VALUES[names.vals] ,length ) ),
+                    dimnames = x$VALUES[names.vals] )
+
+   names( dimnames(result) ) <- names.vals
+
+   return(result)
   
 }
 
