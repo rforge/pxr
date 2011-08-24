@@ -10,7 +10,7 @@
 #
 #################################################################
 
-read.px <- function( filename , encod.from = "ISO_8859-1", encod.to = "UTF-8") {
+read.px <- function( filename , encod.from = "ISO_8859-1", encod.to = "UTF-8", na.string='"."') {
 
     ## auxiliary functions ##
 
@@ -26,7 +26,7 @@ read.px <- function( filename , encod.from = "ISO_8859-1", encod.to = "UTF-8") {
 
     get.attributes <- function( x ){
         x <- gsub( "([A-Z-]*)\\((.*)\\).*", "\\1;\\2", x ) ## parte etiqueta y atributo con ";"
-        x <- strsplit( x, ";" )
+        x <- strsplit( x, ";")
         x <- lapply( x, function( x ) c( x, rep( "value", 2 - length( x ) ) ) )
         x <- do.call( rbind, x )
         x[,2] <- unquote( x[,2] )
@@ -36,21 +36,21 @@ read.px <- function( filename , encod.from = "ISO_8859-1", encod.to = "UTF-8") {
     break.clean <- function( x, sep = '\\"' ) {
         #x <- strsplit( unquote( x ), sep )[[1]]
 
-        x <- strsplit( x, sep )[[1]]
-        x <- clean.spaces( x ) 
+        x <- strsplit( x, sep, useBytes=TRUE)[[1]]
+        if (sep != " ") x <- clean.spaces( x )
         x <- x[ x != "" ]
         x <- x[ x != "," ]
         x
     }
 
 
-    cleanDat <- function( x ){
-        x <- break.clean( x, " " )
-        x <- gsub( ".*,", "", x )           # eliminates keys part in files with KEYS argument
-        x <- gsub( "\"\\.\\.\"","NA", x )
-        x <- gsub( "\"\\.\"" ,"NA", x ) 
-        as.numeric( x[ x != "" ] )
-    }
+    ## cleanDat <- function( x ){
+    ##     x <- break.clean( x, " " )
+    ##     x <- gsub( ".*,", "", x )           # eliminates keys part in files with KEYS argument
+    ##     x <- gsub( "\"\\.\\.\"","NA", x )
+    ##     x <- gsub( "\"\\.\"" ,"NA", x ) 
+    ##     as.numeric( x[ x != "" ] )
+    ## }
 
     get.keys <- function( x, codes, values, keys ){
         x <- break.clean( x, " " )
@@ -85,8 +85,8 @@ read.px <- function( filename , encod.from = "ISO_8859-1", encod.to = "UTF-8") {
                                              ## platforms; maybe a
                                              ## different encoding is
                                              ## required
-    a <- unlist( strsplit( a, ";", useBytes = T ) )
-    a <- do.call( rbind, strsplit( a, "=" ) )
+    a <- unlist( strsplit( a, ";", fixed=TRUE, useBytes = TRUE ) )
+    a <- do.call( rbind, strsplit( a, "=", fixed=TRUE, useBytes=TRUE) )
 
     a <- data.frame( cbind( get.attributes( a[, 1]), a[, 2] ) )
     colnames( a ) <- c( "label", "attribute", "value" )
@@ -112,7 +112,11 @@ read.px <- function( filename , encod.from = "ISO_8859-1", encod.to = "UTF-8") {
     #if( "KEYS" %in% names( px ) )
     #    px$internal.keys <- get.keys( px$DATA$value, px$CODES, px$VALUES, px$KEYS )
 
-    px$DATA$value    <- cleanDat( px$DATA$value )
+##    px$DATA$value    <- cleanDat( px$DATA$value )
+    dat <- textConnection(px$DATA$value) #much faster than with cleanDat (strsplit)
+    px$DATA$value <- scan(dat, na.strings=na.string, quiet=TRUE)
+    close(dat)
+    
     class( px ) <- "px"
     return( px )
 }
