@@ -7,7 +7,8 @@ Reads a PC-Axis file
 This function reads a PC-AXIS file (a text file with certain format) and creates an object of the class px.
 }
 \usage{
-read.px( filename, encod.from = "ISO_8859-1", encod.to = "UTF-8", na.string='"."')
+read.px(filename, encod.from = "ISO_8859-1", encod.to = "UTF-8",
+        na.strings=c('"."', '".."', '"..."', '"...."'))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -16,7 +17,7 @@ read.px( filename, encod.from = "ISO_8859-1", encod.to = "UTF-8", na.string='"."
     (see \code{\link{iconv}} for details).}
   \item{encod.to}{A character string describing the target encoding (see
     \code{\link{iconv}} for details).}
-  \item{na.string}{A character to be interpreted as missing value in
+  \item{na.strings}{A character to be interpreted as missing value in
     the \code{DATA} field of the PC-AXIS file. The chapter 4 of the
     second reference provides details about the dot codes used in the
     PC-AXIS format.}

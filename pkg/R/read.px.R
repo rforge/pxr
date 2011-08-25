@@ -10,7 +10,8 @@
 #
 #################################################################
 
-read.px <- function( filename , encod.from = "ISO_8859-1", encod.to = "UTF-8", na.string='"."') {
+read.px <- function( filename , encod.from = "ISO_8859-1", encod.to = "UTF-8",
+                    na.strings=c('"."', '".."', '"..."', '"...."')) {
 
     ## auxiliary functions ##
 
@@ -114,7 +115,7 @@ read.px <- function( filename , encod.from = "ISO_8859-1", encod.to = "UTF-8", n
 
 ##    px$DATA$value    <- cleanDat( px$DATA$value )
     dat <- textConnection(px$DATA$value) #much faster than with cleanDat (strsplit)
-    px$DATA$value <- scan(dat, na.strings=na.string, quiet=TRUE)
+    px$DATA$value <- scan(dat, na.strings=na.strings, quiet=TRUE)
     close(dat)
     
     class( px ) <- "px"
