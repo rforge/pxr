@@ -10,7 +10,7 @@
 #
 #################################################################
 
-read.px <- function( filename, encod.from = "ISO_8859-1", encod.to = "UTF-8",
+read.px <- function( filename, encoding = "latin1", 
                     na.strings = c('"."', '".."', '"..."', '"...."')) {
 
     ## auxiliary functions ##
@@ -74,7 +74,7 @@ read.px <- function( filename, encod.from = "ISO_8859-1", encod.to = "UTF-8",
 
     ## end: auxiliary functions ##
 
-    a <- scan( filename, what = "character", sep = "\n", quiet = TRUE, fileEncoding = "latin1" )
+    a <- scan( filename, what = "character", sep = "\n", quiet = TRUE, fileEncoding = encoding )
     a <- paste( a, collapse = " " )	## " " necesario para que no junte lineas en DATA
     ## a <- iconv( a, from=encod.from, to=encod.to)    ## just in case, on some
                                              ## platforms; maybe a
