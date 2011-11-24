@@ -1,0 +1,93 @@
+CHARSET="ANSI";
+AXIS-VERSION="2000";
+CREATION-DATE="20040209 10:14";
+SUBJECT-CODE="01";
+SUBJECT-AREA=" Cifras de poblaci¢n";
+MATRIX="01001";
+TITLE="Cifras de poblaci¢n del Censo 2001 por Comunidad Aut¢noma y Provincia";
+CONTENTS="Cifras de poblaci¢n del Censo 2001";
+UNITS="?";
+SOURCE="Instituto Nacional de Estad¡stica ";
+CONTACT="INE E-mail: www.ine.es/infoine Fax: +34 91 5839158 Tel:  +34 "
+"915839100";
+COPYRIGHT=YES;
+STUB="Comunidad Autónoma y Provincia";
+HEADING="Total";
+VALUES("Comunidad Autónoma y Provincia")="TOTAL NACIONAL",
+"Andalucía",
+"Almería",
+"Cádiz",
+"Córdoba",
+"Granada",
+"Huelva",
+"Jaén",
+"Málaga",
+"Sevilla",
+"Aragón",
+"Huesca",
+"Teruel",
+"Zaragoza",
+"Asturias (Principado de)",
+"Balears (Illes)",
+"Canarias",
+"Palmas (Las)",
+"Santa Cruz de Tenerife",
+"Cantabria",
+"Castilla y León",
+"Ávila",
+"Burgos",
+"León",
+"Palencia",
+"Salamanca",
+"Segovia",
+"Soria",
+"Valladolid",
+"Zamora",
+"Castilla-La Mancha",
+"Albacete",
+"Ciudad Real",
+"Cuenca",
+"Guadalajara",
+"Toledo",
+"Cataluña",
+"Barcelona",
+"Girona",
+"Lleida",
+"Tarragona",
+"Comunidad Valenciana",
+"Alicante/Alacant",
+"Castellón/Castelló",
+"Valencia/València",
+"Extremadura",
+"Badajoz",
+"Cáceres",
+"Galicia",
+"Coruña (A)",
+"Lugo",
+"Ourense",
+"Pontevedra",
+"Madrid (Comunidad de)",
+"Murcia (Región de)",
+"Navarra (Cdad. Foral de)",
+"País Vasco",
+"Álava",
+"Guipúzcoa",
+"Vizcaya",
+"Rioja (La)",
+"Ceuta y Melilla",
+"Ceuta",
+"Melilla";
+VALUES("Total")="Total";
+DECIMALS=0;
+SHOWDECIMALS=0;
+MAP("Comunidad Aut¢noma y Provincia")="spain_ccaapro_img_ind";
+CODES("Comunidad Aut¢noma y Provincia")="CA00","CA01","04","11","14","18","21","23","29","41","CA02","22","44","50","CA03",
+"CA04","CA05","35","38","CA06",
+"CA07","05","09","24","34","37","40","42","47","49","CA08","02","13","16","19","45","CA09","08","17","25","43",
+"CA10","03","12","46","CA11","06","10","CA12","15","27","32","36","CA13",
+"CA14","CA15","CA16","01","20","48","CA17","CA20","CA18","CA19";
+DATA=
+4.0847371E7 7357558.0 536731.0 1116491.0 761657.0 821660.0 462579.0 643820.0 1287017.0 1727603.0 1204215.0 206502.0 135858.0 861855.0 1062998.0 841669.0 1694477.0 887676.0 806801.0 535131.0 2456474.0 
+163442.0 348934.0 488751.0 174143.0 345609.0 147694.0 90717.0 498094.0 199090.0 1760516.0 364835.0 478957.0 200346.0 174999.0 541379.0 6343110.0 4805927.0 565304.0 362206.0 609673.0 
+4162776.0 1461925.0 484566.0 2216285.0 1058503.0 654882.0 403621.0 2695880.0 1096027.0 357648.0 338446.0 903759.0 5423384.0 1197646.0 555829.0 2082587.0 286387.0 673563.0 1122637.0 276702.0 
+137916.0 71505.0 66411.0 ;
