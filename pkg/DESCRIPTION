@@ -8,7 +8,7 @@ Author: Francisco J. Viciana, Carlos J. Gil Bellosta, Oscar Perpiñán Lamigueir
 Authors@R:c(person("Francisco J.",  "Viciana", email= "franciscoj.viciana@juntadeandalucia.es", role='aut'),
 	   person("Carlos J.", "Gil Bellosta", email="cgb@datanalytics.com", role='aut'), 
 	   person("Oscar", "Perpiñán Lamigueiro", email="oscar.perpinan@upm.es", role=c('cre', 'aut')), 
-	   person("Emilio", "Torres Manzanera", email="torres@uniovi.es", role='ctb')
+	   person("Emilio", "Torres Manzanera", email="torres@uniovi.es", role='ctb'),
 	   person("Vicente David", "Canto Casasola", email= "vicented.canto.sspa@juntadeandalucia.es", role='ctb'),
 	   person("Jorge Iván", "Vélez", email="jorgeivanvelez@gmail.com", role='ctb')
 	   )

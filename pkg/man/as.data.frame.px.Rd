@@ -30,7 +30,8 @@ A data.frame object.
 http://www.scb.se/upload/PC-Axis/Support/Documents/PC-Axis_fileformat.pdf
 }
 \author{
-Carlos J. Gil Bellosta, Oscar Perpiñán Lamigueiro, Francisco J. Viciana Fernández
+Carlos J. Gil Bellosta, Oscar Perpiñán Lamigueiro, Francisco J. Viciana
+Fernández, Emilio Torres
 }
 %\note{ }
 

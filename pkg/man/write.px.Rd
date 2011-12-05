@@ -5,7 +5,7 @@ Write a PC-Axis file
 }
 \description{
   
-  This function write a objest of class \code{px} to a PC-Axis file 
+  This function write a object of class \code{px} to a PC-Axis file 
 
 }
 \usage{
