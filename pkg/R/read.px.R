@@ -10,24 +10,22 @@
 #
 #################################################################
 
-read.px <- function( filename , encod.from = "ISO_8859-1", encod.to = "UTF-8",
-                    na.strings=c('"."', '".."', '"..."', '"...."')) {
+read.px <- function(filename, encoding = "latin1", 
+                    na.strings = c('"."', '".."', '"..."', '"...."')) {
 
     ## auxiliary functions ##
 
-    unquote <- function( x ){
-        gsub( '\\"', "", x    )
+    unquote <- function(x){
+        gsub('\\"', "", x)
     }
 
-    clean.spaces <- function( x ){
-        x <- gsub( "^[[:space:]]+", "", x ) # elimina espacios en blanco por delante
-        x <- gsub( "[[:space:]]+$", "", x ) # elimina espacios en blanco por detras
-        x
+    clean.spaces <- function(x){
+        gsub("^[[:space:]]+|[[:space:]]+$", "", x) # elimina blancos por delante|detrás
     }
 
-    get.attributes <- function( x ){
+    get.attributes <- function(x){
         x <- gsub( "([A-Z-]*)\\((.*)\\).*", "\\1;\\2", x ) ## parte etiqueta y atributo con ";"
-        x <- strsplit( x, ";")
+        x <- strsplit( x, ";" )
         x <- lapply( x, function( x ) c( x, rep( "value", 2 - length( x ) ) ) )
         x <- do.call( rbind, x )
         x[,2] <- unquote( x[,2] )
@@ -35,37 +33,10 @@ read.px <- function( filename , encod.from = "ISO_8859-1", encod.to = "UTF-8",
     }
 
     break.clean <- function( x, sep = '\\"' ) {
-        #x <- strsplit( unquote( x ), sep )[[1]]
-
-        x <- strsplit( x, sep, useBytes=TRUE)[[1]]
+        x <- strsplit( x, sep )[[1]]
         if (sep != " ") x <- clean.spaces( x )
         x <- x[ x != "" ]
         x <- x[ x != "," ]
-        x
-    }
-
-
-    ## cleanDat <- function( x ){
-    ##     x <- break.clean( x, " " )
-    ##     x <- gsub( ".*,", "", x )           # eliminates keys part in files with KEYS argument
-    ##     x <- gsub( "\"\\.\\.\"","NA", x )
-    ##     x <- gsub( "\"\\.\"" ,"NA", x ) 
-    ##     as.numeric( x[ x != "" ] )
-    ## }
-
-    get.keys <- function( x, codes, values, keys ){
-        x <- break.clean( x, " " )
-        x <- x[ grep( ",", x ) ]                # keep just components having a comma 
-        x <- unquote( x )
-        x <- do.call( rbind, sapply( x, break.clean, ",", simplify = F ) )
-        x <- data.frame( x[, -ncol( x ) ] )               # drops the data part
-        rownames( x ) <- NULL
-        colnames( x ) <- rev( names( keys ) )
-        
-        encoded.vars <- names( keys )[ keys == "CODES" ]
-        for( var.name in encoded.vars ){
-            x[[var.name]] <- values[[ var.name ]] [ match( x[[ var.name ]], codes[[ var.name ]] ) ]
-        }
         x
     }
 
@@ -79,46 +50,33 @@ read.px <- function( filename , encod.from = "ISO_8859-1", encod.to = "UTF-8",
 
     ## end: auxiliary functions ##
 
-    a <- scan( filename, what = "character", sep = "\n", quiet = TRUE )
-    a <- paste( a, collapse = " " )	## " " necesario para que no
-                                        ## junte lineas en DATA
-    a <- iconv( a, from=encod.from, to=encod.to)    ## just in case, on some
-                                             ## platforms; maybe a
-                                             ## different encoding is
-                                             ## required
-    a <- unlist( strsplit( a, ";", fixed=TRUE, useBytes = TRUE ) )
-    a <- do.call( rbind, strsplit( a, "=", fixed=TRUE, useBytes=TRUE) )
+    a <- scan(filename, what = "character", sep = "\n", quiet = TRUE, fileEncoding = encoding)
+    a <- paste(a, collapse = " ")	## " " necesario para que no junte lineas en DATA
+    a <- unlist(strsplit(a, ";"))	## ; is the logical line end in px files
+    a <- do.call(rbind, strsplit(a, "=" ))
+    a <- data.frame(cbind(get.attributes(a[, 1]), a[, 2]))
+    colnames(a) <- c("label", "attribute", "value")
 
-    a <- data.frame( cbind( get.attributes( a[, 1]), a[, 2] ) )
-    colnames( a ) <- c( "label", "attribute", "value" )
-
-    a$label     <- make.names( a$label )
-    a$attribute <- make.names( a$attribute )
-    a$value     <- as.character( a$value )
+    a$label     <- make.names(a$label)
+    a$attribute <- make.names(a$attribute)
+    a$value     <- as.character(a$value)
 
     ## build a px object: list with px class attribute ##
 
-    px <- sapply( unique( a$label ), function( label ) make.list( a, label ), simplify = FALSE )
+    px <- sapply(unique( a$label ), function(label) make.list(a, label), simplify = FALSE)
 
     # turns data values into an R vector
-    px$STUB$value    <- make.names( break.clean( px$STUB$value ) )
-    px$HEADING$value <- make.names( break.clean( px$HEADING$value ) )
+    px$STUB$value    <- make.names(break.clean(px$STUB$value))
+    px$HEADING$value <- make.names(break.clean(px$HEADING$value))
 
-    px$VALUES <- lapply( px$VALUES, break.clean )
-    px$CODES  <- lapply( px$CODES, break.clean )
+    px$VALUES <- lapply(px$VALUES, break.clean )
+    px$CODES  <- lapply(px$CODES,  break.clean )
 
-    # only if data contains the KEYS keyword
-    # such datasets have a different data format and require an extra field to
-    # keep track of which rows are present in the data (see format document for details)
-    #if( "KEYS" %in% names( px ) )
-    #    px$internal.keys <- get.keys( px$DATA$value, px$CODES, px$VALUES, px$KEYS )
-
-##    px$DATA$value    <- cleanDat( px$DATA$value )
     dat <- textConnection(px$DATA$value) #much faster than with cleanDat (strsplit)
-    px$DATA$value <- scan(dat, na.strings=na.strings, quiet=TRUE)
+    px$DATA$value <- scan(dat, na.strings = na.strings, quiet = TRUE)
     close(dat)
     
-    class( px ) <- "px"
-    return( px )
+    class(px) <- "px"
+    px
 }
 
