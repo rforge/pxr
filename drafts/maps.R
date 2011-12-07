@@ -3,6 +3,9 @@ library(maptools)
 library(classInt)
 library(colorspace)
 
+source('read.ini.R')
+source('../pkg/R/as.data.frame.px.R')##nueva versión no incluida en 0.24
+
 unquote <- function(x){
   gsub('\\"', "", x)
 }
@@ -42,34 +45,61 @@ spplot(mapa['dat'], col.regions=cols, at=int$brks)
 
 ####################################################################################
 
-## Ejemplo de Emilio
-ficheropx <- read.px(filename="data/pcaxis824627184.px")
-summary(ficheropx)
+plotPX <- function(x, select, shpPath = 'shp',  encoding = "latin1", n=10, style='fisher', ...){
 
-plotPX <- function(x){
   dat <- as.data.frame(x,  use.codes = TRUE)  
-  mapName <- unquote(x$MAP)
-  mapsInfo <- read.pxini(filename = mapName)
+
+  mapName <- unique(unquote(x$MAP))[1]
+  mapsInfo <- read.pxini(filename = mapName, shpPath=shpPath, encoding=encoding)
   nmaps <- mapsInfo$nummaps
-  iCol <- agrep(names(x$MAP), names(dat))
-  mapsList <- lapply(1:nmaps, function(i, mapsInfo, dat, iCol) {
-     mapi <-  readShapePoly(mapsInfo$filesshp[i])
-     field <- mapsInfo$keyfields[i]
-     ## Relaciono el data.frame con el shapefile a través de sus IDs
-     ## Debieramos probar a hacer esto con spCbind
-     idx <- match(mapi[[field]], dat[,iCol])
-     mapi$dat <- dat$dat[idx]
-     int <- classIntervals(mapi$dat, 10, style='jenks')
-     cols <- heat_hcl(10)
-     p <- spplot(mapi['dat'], col.regions=cols, at=int$brks)
-     p
-   }, mapsInfo, dat, iCol)
+
+  heading <- x$HEADING$value
+  stub <- x$STUB$value
+  vars <- levels(dat[,heading])
+  datWide <- reshape(dat, timevar=heading, ## Incorporarlo a as.data.frame.px
+                     varying=list(vars),
+                     v.names='dat',
+                     idvar=stub,
+                     direction='wide')
+
+  if (missing(select)) select <- vars
+
+  iCol <- agrep(unique(names(x$MAP))[1], names(datWide))
+
+  fooPlot <- function(i, mapsInfo, datWide, iCol, n, style, ...) {
+    mapi <-  readShapePoly(mapsInfo$filesshp[i])
+    field <- mapsInfo$keyfields[i]
+    ## Relaciono el data.frame con el shapefile a través de sus IDs
+    ## Debieramos probar a hacer esto con spCbind
+    ## idx <- match(mapi[[field]], dat[,iCol])
+    ## mapi$dat <- dat$dat[idx]
+
+    idx <- match(mapi[[field]], datWide[,iCol])
+    dat2add <- data.frame(datWide[idx, select]) ##Hace falta cuando sólo es una columna
+    names(dat2add) <- select
+    mapi@data <- cbind(mapi@data, dat2add)
+
+    int <- classIntervals(c(as.matrix(dat2add)), n, style=style)
+    cols <- sequential_hcl(length(int$brks)) ##incluirlo como argumento de la función
+    p <- spplot(mapi[select], col.regions=cols, at=int$brks, ...)
+    p
+  }
+  mapsList <- lapply(1:nmaps, fooPlot, mapsInfo, datWide, iCol, n, style, ...)
   names(mapsList) <- mapsInfo$keyfields
   do.call(c, mapsList)
 }
 
+ficheropx <- read.px(filename="data/pcaxis824627184.px")
+datPX <- read.px('data/pcaxis-676270323.px')
+
+summary(ficheropx)
+summary(datPX)
+
+
 plotPX(ficheropx)
 
+plotPX(datPX)
+plotPX(datPX, select=c('Mujeres', 'Varones'))
 
 ##problema con Madrid y Andalucía
 codes <- as.data.frame(ficheropx, use.codes=TRUE)[,2]
@@ -77,3 +107,4 @@ nms <- as.data.frame(ficheropx)[,2]
 data.frame(codes=codes, names=nms)
 ##Madrid no está como provincia, sólo como Comunidad
 ##...pero Andalucía sí está como Comunidad ¿¿??
+

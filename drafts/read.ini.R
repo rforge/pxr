@@ -24,6 +24,6 @@ read.pxini <- function(filename, shpPath = 'shp',  encoding = "latin1", ...){
 }
 
 
-filename <- "spain_ccaapro_img_ind"
+## filename <- "spain_ccaapro_img_ind"
 
-read.pxini(filename=filename)
+## read.pxini(filename=filename)
