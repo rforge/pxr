@@ -1,5 +1,7 @@
 library(pxR)
 library(maptools)
+library(classInt)
+library(colorspace)
 
 unquote <- function(x){
   gsub('\\"', "", x)
@@ -34,8 +36,6 @@ idx <- match(mapa$PROV,  datTotal$provincias)
 mapa$dat <- datTotal$dat[idx]
 
 ##Elaboro mapa. Elijo intervalos con classIntervals
-library(classInt)
-library(colorspace)
 int <- classIntervals(mapa$dat, 10, style='jenks')
 cols <- heat_hcl(10)
 spplot(mapa['dat'], col.regions=cols, at=int$brks)
@@ -45,20 +45,35 @@ spplot(mapa['dat'], col.regions=cols, at=int$brks)
 ## Ejemplo de Emilio
 ficheropx <- read.px(filename="data/pcaxis824627184.px")
 summary(ficheropx)
-dat82 <- as.data.frame(ficheropx,  use.codes = TRUE)
-nombremapa <- unquote(ficheropx$MAP)
-mapasINFO <- read.pxini(nombremapa)
+
+plotPX <- function(x){
+  dat <- as.data.frame(x,  use.codes = TRUE)  
+  mapName <- unquote(x$MAP)
+  mapsInfo <- read.pxini(filename = mapName)
+  nmaps <- mapsInfo$nummaps
+  iCol <- agrep(names(x$MAP), names(dat))
+  mapsList <- lapply(1:nmaps, function(i, mapsInfo, dat, iCol) {
+     mapi <-  readShapePoly(mapsInfo$filesshp[i])
+     field <- mapsInfo$keyfields[i]
+     ## Relaciono el data.frame con el shapefile a través de sus IDs
+     ## Debieramos probar a hacer esto con spCbind
+     idx <- match(mapi[[field]], dat[,iCol])
+     mapi$dat <- dat$dat[idx]
+     int <- classIntervals(mapi$dat, 10, style='jenks')
+     cols <- heat_hcl(10)
+     p <- spplot(mapi['dat'], col.regions=cols, at=int$brks)
+     p
+   }, mapsInfo, dat, iCol)
+  names(mapsList) <- mapsInfo$keyfields
+  do.call(c, mapsList)
+}
+
+plotPX(ficheropx)
 
 
-## Dibujamos los mapas
-
-mapaPROV <- readShapePoly(mapasINFO$filesshp[1])
-idx <- match(mapaPROV$PROV,  dat82[, 2])
-mapaPROV$dat <- dat82$dat[idx]
-
-int <- classIntervals(mapaPROV$dat, 10, style='jenks')
-cols <- heat_hcl(10)
-spplot(mapaPROV['dat'], col.regions=cols, at=int$brks)
-
-
-mapaCOM <- readShapePoly(mapasINFO$filesshp[2])
+##problema con Madrid y Andalucía
+codes <- as.data.frame(ficheropx, use.codes=TRUE)[,2]
+nms <- as.data.frame(ficheropx)[,2]
+data.frame(codes=codes, names=nms)
+##Madrid no está como provincia, sólo como Comunidad
+##...pero Andalucía sí está como Comunidad ¿¿??
