@@ -14,13 +14,15 @@ read.pxini <- function(filename, shpPath = 'shp',  encoding = "latin1", ...){
     }
 
     filesshp  <- foo("^[0-9]*=", a)
-    filesshp  <- gsub(".*\\\\", "", filesshp)
+    filesshp  <- gsub(".*\\\\", "", filesshp)		# Maybe not too platform independent
     filesshp  <- file.path(shpPath, filesshp)
+
+    # Note: the code assumes that maps and keyfields are listed in the same order in the .ini file
 
     list( 
             nummaps   = as.numeric(foo("NumMaps=", a)),
-            filesshp  = foo("KeyField=", a),
-            keyfields = keyfields
+            keyfields = foo("KeyField=", a),
+            filesshp  = filesshp
     )
 }
 
