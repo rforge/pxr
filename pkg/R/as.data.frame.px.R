@@ -10,9 +10,9 @@
 #
 #################################################################
 
-as.data.frame.px <- function( x, row.names, optional, use.codes = FALSE, ... ){
-  names.vals      <- c( rev(x$HEADING$value), rev( x$STUB$value ) )
+as.data.frame.px <- function( x, ..., use.codes = FALSE, direction = 'long'){
 
+  names.vals      <- c( rev(x$HEADING$value), rev( x$STUB$value ) )
   values <- x$VALUES
 
   if( is.logical( use.codes ) && use.codes )
@@ -30,9 +30,21 @@ as.data.frame.px <- function( x, row.names, optional, use.codes = FALSE, ... ){
     }
   }
 
-  result          <- data.frame( do.call(expand.grid, values[ names.vals ] ), x$DATA$value )
-  names( result ) <- c( names.vals, "dat" )
-
+  dat          <- data.frame( do.call(expand.grid, values[ names.vals ] ), x$DATA$value )
+  names(dat) <- c( names.vals, "dat" )
+ 
+  if (direction == 'wide') {
+    stub <- x$STUB$value
+    heading <- x$HEADING$value
+    vars <- x$VALUES[[heading]]
+    result <- reshape(dat, timevar=heading,
+                      varying=list(vars),
+                      v.names='dat',
+                      idvar=stub,
+                      direction='wide')
+  } else {
+    result <- dat
+  }
   result
 }
 

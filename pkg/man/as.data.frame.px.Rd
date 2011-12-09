@@ -9,13 +9,17 @@ Extraction of data from px into data.frame objects
 This function extracts the data component from a px object as a \code{data.frame}.
 }
 \usage{
-\S3method{as.data.frame}{px}( x, row.names, optional, use.codes = FALSE, ... )
+\S3method{as.data.frame}{px}( x, ..., use.codes = FALSE, direction = 'long')
 }
 \arguments{
   \item{x}{ a px object }
-  \item{row.names}{ Not used; ignored }
-  \item{optional}{ Not used; ignored }
-  \item{use.codes}{ If true, this parameter replaces the names (or levels) of the variables by their codes, if available; alternatively, it can be a character vector identifying those variables for which codes will replace the levels of the variables. See details section. }
+  \item{use.codes}{ If true, this parameter replaces the names (or
+    levels) of the variables by their codes, if available;
+    alternatively, it can be a character vector identifying those
+    variables for which codes will replace the levels of the
+    variables. See details section. }
+  \item{direction}{character string, either ‘"wide"’ to reshape to wide format,
+          or ‘"long"’ to reshape to long format (default).}
   \item{...}{ Additional arguments, currently not used }
 }
 \details{
@@ -43,7 +47,7 @@ Fernández, Emilio Torres
   }
 
 \examples{
-my.px.object <- read.px( system.file( "extdata", "example.px", package = "pxR") )
-my.px.data   <- as.data.frame( my.px.object )
+my.px.object <- read.px(system.file( "extdata", "example.px", package = "pxR"))
+my.px.data   <- as.data.frame(my.px.object)
 }
 \keyword{ manip }
