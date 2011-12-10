@@ -36,9 +36,9 @@ as.data.frame.px <- function( x, ..., use.codes = FALSE, direction = 'long'){
   if (direction == 'wide') {
     stub <- x$STUB$value
     heading <- x$HEADING$value
-    vars <- x$VALUES[[heading]]
+    vars <- x$VALUES[heading]
     result <- reshape(dat, timevar=heading,
-                      varying=list(vars),
+                      varying=vars,
                       v.names='dat',
                       idvar=stub,
                       direction='wide')
