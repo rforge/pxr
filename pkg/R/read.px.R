@@ -8,6 +8,7 @@
 #
 # Modifications: 
 #		20111210, cjgb: in the data string, "-" may represent the value 0
+#		20111210, cjgb: fixing the strsplit when the split character is contained in the data part
 #
 #################################################################
 
@@ -54,7 +55,9 @@ read.px <- function(filename, encoding = "latin1",
     a <- scan(filename, what = "character", sep = "\n", quiet = TRUE, fileEncoding = encoding)
     a <- paste(a, collapse = " ")	## " " necesario para que no junte lineas en DATA
     a <- unlist(strsplit(a, ";"))	## ; is the logical line end in px files
-    a <- do.call(rbind, strsplit(a, "=" ))
+   
+    a <- sub( "=", "//=//", a )
+    a <- do.call(rbind, strsplit(a, "//=//" ))
     a <- data.frame(cbind(get.attributes(a[, 1]), a[, 2]))
     colnames(a) <- c("label", "attribute", "value")
 
