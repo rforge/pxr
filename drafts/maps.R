@@ -6,7 +6,7 @@ library(maptools)
 #library(classInt)
 #library(colorspace)
 
-source('read.ini.R')
+source('read.px.ini.alt.R')
 source('../pkg/R/as.data.frame.px.R')##nueva versión no incluida en 0.24
 
 
@@ -16,7 +16,7 @@ unquote <- function(x){
 }
 
 
-plot.px <- function(x, select, shpPath = 'shp',  encoding = "latin1", n=10, style='fisher', ...){
+plot.px <- function(x, select, shpPath = 'shp',  encoding = "latin1", ...){##n=10, style='fisher', ...){
 
   heading <- x$HEADING$value
   vars <- x$VALUES[[heading]]
