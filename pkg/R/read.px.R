@@ -7,6 +7,7 @@
 # Authors:      fvf, cjgb, opl
 #
 # Modifications: 
+#		20111210, cjgb: in the data string, "-" may represent the value 0
 #
 #################################################################
 
@@ -72,7 +73,9 @@ read.px <- function(filename, encoding = "latin1",
     px$VALUES <- lapply(px$VALUES, break.clean )
     px$CODES  <- lapply(px$CODES,  break.clean )
 
-    dat <- textConnection(px$DATA$value) #much faster than with cleanDat (strsplit)
+    tmp <- gsub('"-"', 0, px$DATA$value)        # 0 can be encoded as "-"
+    dat <- textConnection(tmp)                  #much faster than with cleanDat (strsplit)
+    # dat <- textConnection(px$DATA$value) #much faster than with cleanDat (strsplit)
     px$DATA$value <- scan(dat, na.strings = na.strings, quiet = TRUE)
     close(dat)
     
