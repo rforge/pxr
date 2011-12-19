@@ -15,6 +15,54 @@ unquote <- function(x){
   gsub('\\"', "", x)
 }
 
+panel.polygonNames <- function (x, y, z, subscripts, at = pretty(z), shrink, labels = NULL, 
+                                label.style = c("mixed", "flat", "align"),
+                                ## contour = FALSE, region = TRUE,
+                                ## col = add.line$col, lty = add.line$lty, lwd = add.line$lwd, 
+                                ## cex = add.text$cex, font = add.text$font,
+                                ## fontfamily = add.text$fontfamily, 
+                                ## fontface = add.text$fontface, col.text = add.text$col,
+                                ..., 
+                                col.regions = regions$col, alpha.regions = regions$alpha, 
+                                grid.polygons, sp.layout) {
+  regions <- trellis.par.get("regions")
+  numcol <- length(at) - 1
+  numcol.r <- length(col.regions)
+  col.regions <- if (numcol.r <= numcol) 
+    rep(col.regions, length = numcol)
+  else col.regions[floor(1 + (1:numcol - 1) * (numcol.r - 1)/(numcol - 
+                                                              1))]
+  zcol <- rep(NA, length(z))
+  for (i in seq(along = col.regions)) zcol[!is.na(x) & !is.na(y) & 
+                  !is.na(z) & z >= at[i] & z < at[i + 1]] <- i
+  label.style <- match.arg(label.style)
+  zcol <- as.numeric(zcol[subscripts])
+  pls = slot(grid.polygons, "polygons")
+  pO = slot(grid.polygons, "plotOrder")
+  for (i in pO) {
+    Srs <- slot(pls[[i]], "Polygons")
+    pOi <- slot(pls[[i]], "plotOrder")
+    id <- slot(pls[[i]], 'ID')
+    for (j in pOi) {
+      coords = slot(Srs[[j]], "coords")
+      if (slot(Srs[[j]], "hole")) {
+        bg = trellis.par.get()$background
+        if (bg$col == "transparent") 
+          fill = "white"
+        else fill = bg$col
+        alpha = bg$alpha
+      }
+      else {
+        fill = col.regions[zcol[i]]
+        alpha = alpha.regions
+      }
+      gp = gpar(fill = fill, alpha = alpha)##, col = col, 
+##        lwd = lwd, lty = lty)
+      grid.polygon(coords[, 1], coords[, 2], default.units = "native", 
+                   gp = gp, name=paste('ID', id, sep=':'))
+    }
+  }
+}
 
 plot.px <- function(x, select, shpPath = 'shp',  encoding = "latin1", ...){##n=10, style='fisher', ...){
 
@@ -43,7 +91,7 @@ plot.px <- function(x, select, shpPath = 'shp',  encoding = "latin1", ...){##n=1
 
     ## int <- classIntervals(c(as.matrix(dat2add)), n, style=style)
     ## cols <- sequential_hcl(length(int$brks)) ##incluirlo como argumento de la función
-    p <- spplot(mapi[select], ...)## col.regions=cols, at=int$brks, ...)
+    p <- spplot(mapi[select], ..., panel=panel.polygonNames)## col.regions=cols, at=int$brks, ...)
     p
   }
   mapsList <- lapply(1:nmaps, fooPlot, mapsInfo, datWide, iCol)##, n, style)
@@ -67,6 +115,56 @@ plot(ficheropx)
 
 plot(datPX)
 plot(datPX, select=c('Mujeres', 'Varones'))
+
+
+library(gridSVG)
+
+
+plot(datPX, select='Mujeres')
+grobs <- grid.ls()
+nms <- grobs$name[grobs$type == "grobListing"]
+str(grid.get(nms[139]))
+##idxNames <- grep('GRID.polygon', nms)
+idxNames <- grep('ID:', nms)
+IDs <- strsplit(nms[idxNames], 'ID:')
+IDs <- sapply(IDs, function(x)as.numeric(x[2]))
+
+mapName <- unique(unquote(datPX$MAP))[1]
+mapsInfo <- read.pxini(filename = mapName, shpPath='shp')
+mapSHP <- readShapePoly(mapsInfo$filesshp)
+
+mapaDat <- as.data.frame(mapSHP)
+mapaIDs <- as.numeric(rownames(mapaDat))
+## pols <- slot(mapSHP, 'polygons') 
+## pOrder <- slot(mapSHP, 'plotOrder')
+## pOrder2 <- for(i in pOrder){
+##   pOrderi <- slot(pols[[i]], 'plotOrder')
+##   pID <- slot(pols[[i]], 'ID')
+## print(pID)
+## }
+
+## pID <- sapply(pOrder, function(i, pols){
+##   ord <- slot(pols[[i]], 'plotOrder')
+##   id <- slot(pols[[i]], 'ID')
+##   as.numeric(id)
+##   }, pols)
+
+
+## lapply(unique(nms), function(i){
+lapply(unique(IDs), function(i){
+  id <- paste('ID', i, sep=':')
+  dat <- mapaDat[which(mapaIDs==i),]
+  info <- paste('Prov: ', dat$PROV, ', Area=', dat$AREA/10^4, sep='')
+  g <- grid.get(id)
+  grid.garnish(id,
+               onmouseover=paste("showTooltip(evt, '", info, "')"),
+               onmouseout="hideTooltip()")
+})
+grid.script(filename="tooltip.js")
+
+gridToSVG('garnished.svg')
+
+
 
 
 
