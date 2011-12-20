@@ -1,11 +1,11 @@
 Package: pxR
 Type: Package
 Title: PC-Axis with R
-Version: 0.26
-Date: 2011-12-06
+Version: 0.27
+Date: 2011-12-20
 Encoding: UTF-8
 Author: Francisco J. Viciana, Carlos J. Gil Bellosta, Oscar Perpiñán Lamigueiro
-Authors@R:c(person("Francisco J.",  "Viciana", email= "franciscoj.viciana@juntadeandalucia.es", role='aut'),
+Authors@R: c(person("Francisco J.",  "Viciana", email= "franciscoj.viciana@juntadeandalucia.es", role='aut'),
 	   person("Carlos J.", "Gil Bellosta", email="cgb@datanalytics.com", role='aut'), 
 	   person("Oscar", "Perpiñán Lamigueiro", email="oscar.perpinan@upm.es", role=c('cre', 'aut')), 
 	   person("Emilio", "Torres Manzanera", email="torres@uniovi.es", role='ctb'),
