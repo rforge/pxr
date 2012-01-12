@@ -1,0 +1,52 @@
+Plotting maps with pxR
+
+* Introduction
+
+The pxR package provides a set of functions for reading and writing PC-Axis files. In this files, it is usual to find a  MAP code that links data with a map. In this tutorial a full example is provided to plot a map with PC-Axis data.
+
+* Description of px files.
+
+See  [[http://www.ssb.no/pxmap/pxmap-prodguide.pdf][PX-Map - Producer’s Guide]] for further details. In px file, the key words 'CODES' and 'MAP' are mandatory and must be identical.
+
+ #+BEGIN_EXAMPLE
+MAP("Comunidad Aut�noma y Provincia")="spain_ccaapro_ind";
+CODES("Comunidad Aut�noma y Provincia")="CA00","CA01",...
+#+END_EXAMPLE
+
+The value of MAP link to a .ini file (in this case, spain_ccaapro_ind.ini ). This file contents the maps to plot
+
+ #+BEGIN_EXAMPLE
+[MAPS]
+NumMaps=2
+1=C:\Archivos de programa\PX-Map\Maps\spain_provinces_img_ind_4.shp
+2=C:\Archivos de programa\PX-Map\Maps\spain_regions_img_ind.shp
+#+END_EXAMPLE
+
+In this case, two maps are required: spain_provinces_img_ind_4 and spain_regions_img_ind. Map data are held in the shape format used by ESRI ArcView. For each map, we need the related files: *.shp, *.shx, *.dbf. So we must download the following files:
+
+ #+BEGIN_EXAMPLE
+spain_provinces_img_ind_4.shp
+spain_provinces_img_ind_4.shx
+spain_provinces_img_ind_4.dbf
+spain_regions_img_ind.shp
+spain_regions_img_ind.shx
+spain_regions_img_ind.dbf
+#+END_EXAMPLE
+
+* Getting the shape files
+
+Several National Statistical Institutes provide shape files to plot their px files. For instance:
+- [[http://www.ssb.no/en/software/pxmap/][Statistics Norway]]
+- [[http://www.ine.es/ss/Satellite?blobcol=urldata&blobheader=application%2Fzip&blobheadername1=Content-Disposition&blobheadervalue1=attachment%3B+filename%3Dmapas_completo_municipal.zip&blobkey=urldata&blobtable=MungoBlobs&blobwhere=250%2F237%2Fmapas_completo_municipal.zip&ssbinary=true][Spanish National Statistical Institute]]
+- [[http://www.scb.se/Grupp/Produkter_Tjanster/Verktyg/_Dokument/SCB_PXmap2007.zip][Statistics Sweden]]
+- [[http://www.eustat.es/soft/MapasEH.EXE][Basque Statistics Office]]
+- [[Link:%20http://www.dzs.hr/install/HR-MAP/HR-MAP.zip][Danmarks Statistics]] 
+- [[http://epp.eurostat.ec.europa.eu/portal/page/portal/gisco_Geographical_information_maps/popups/references/administrative_units_statistical_units_1][Eurostat]]
+
+
+We download the Spanish maps ([[http://www.ine.es/ss/Satellite%3Fblobcol%3Durldata&blobheader%3Dapplication%2Fzip&blobheadername1%3DContent-Disposition&blobheadervalue1%3Dattachment%3B%2Bfilename%3Dmapas_completo_municipal.zip&blobkey%3Durldata&blobtable%3DMungoBlobs&blobwhere%3D250%2F237%2Fmapas_completo_municipal.zip&ssbinary%3Dtrue
+][mapas_completo_municipal.zip]]). Unzip this file and move the files to a shp directory, for instance.
+
+* Reading a px file ¿cuál cogemos?
+* Basic plot
+* Maravillas que se nos ocurran...
