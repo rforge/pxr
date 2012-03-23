@@ -7,6 +7,7 @@
 # Authors:      cjgb, opl, fvf
 #
 # Modifications: 
+#		20120323, cjgb: added error check: variables and codes should have the same length
 #
 #################################################################
 
@@ -25,6 +26,11 @@ as.data.frame.px <- function( x, ..., use.codes = FALSE, direction = 'long'){
       } else {
         var.name.value <- agrep(var.name, names.vals, value="TRUE")
       }
+
+      if( length( values[[var.name.value]] ) != length( x$CODES[[var.name]] ) )
+          stop( "The number of levels and codes for variable '", var.name.value, "' should be the same, but are ", 
+	        length( values[[var.name.value]] ), " and ", length( x$CODES[[var.name]] ), " respectively" )
+
       values[[var.name.value]] <- x$CODES[[var.name]]
       ##            values[[var.name]] <- x$CODES[[ var.name ]] 
     }
