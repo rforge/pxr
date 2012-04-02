@@ -8,23 +8,37 @@
 #
 # Modifications: 
 #		20120323, cjgb: added error check: variables and codes should have the same length
+#		20120402, cjgb: warnings can be either errors or warnings depending on paranoia level
 #
 #################################################################
 
-as.data.frame.px <- function( x, ..., use.codes = FALSE, direction = 'long'){
+as.data.frame.px <- function( x, ..., use.codes = FALSE, warnings.as.errors = TRUE, direction = 'long'){
+
+  # stores the user settings and resets them on exit
+  initial.warning.option <- options("warn")$warn
+  on.exit( options(warn=initial.warning.option) )   
+
+  if ( warnings.as.errors )
+    options(warn=2)
 
   names.vals      <- c( rev(x$HEADING$value), rev( x$STUB$value ) )
   values <- x$VALUES
 
-  if( is.logical( use.codes ) && use.codes )
-    use.codes <- names( x$CODES )
+  if (is.logical(use.codes) && use.codes)
+    use.codes <- names(x$CODES)
 
-  if( ! is.logical( use.codes ) ){
-    for( var.name in intersect( use.codes, names( x$CODES ) ) ){
+  if (! is.logical(use.codes)){
+    for( var.name in intersect( use.codes, names(x$CODES) ) ){
       if( var.name %in% names.vals ) {
         var.name.value <- var.name
       } else {
         var.name.value <- agrep(var.name, names.vals, value="TRUE")
+        if (length(var.name.value) > 0 ){
+          var.name.value <- var.name.value[1]			# there could be >1 matches!
+          warning( "Using codes tagged ", var.name , " for variable ", var.name.value, " after fuzzy matching.")
+	} else {
+          stop( "No valid variable name could be found for code tagged ", var.name )
+        }
       }
 
       if( length( values[[var.name.value]] ) != length( x$CODES[[var.name]] ) )
@@ -36,8 +50,15 @@ as.data.frame.px <- function( x, ..., use.codes = FALSE, direction = 'long'){
     }
   }
 
-  dat          <- data.frame( do.call(expand.grid, values[ names.vals ] ), x$DATA$value )
-  names(dat) <- c( names.vals, "dat" )
+  # sanity check: avoids the problem of "reclycling" of values if
+  # the ratio of lenghts of variables and values is an exact integer
+
+  dat <- data.frame(do.call(expand.grid, values[names.vals]))
+  if (nrow(dat) != length(x$DATA$value))
+    stop( "The input file is malformed: data and varnames length differ" )
+
+  dat        <- data.frame(dat, x$DATA$value)
+  names(dat) <- c(names.vals, "dat")
  
   if (direction == 'wide') {
     stub <- x$STUB$value
