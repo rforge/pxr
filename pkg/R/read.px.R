@@ -61,7 +61,20 @@ read.px <- function(filename, encoding = "latin1",
     tmp[2] <- gsub(";", "", tmp[2])			# removing ";" within DATA number strings
     a <- paste(tmp[1], "DATA=", tmp[2], sep = "")
 
-    a <- unlist(strsplit(a, ";"))	## ; is the logical line end in px files
+    #a <- unlist(strsplit(a, ";"))	## ; is the logical line end in px files
+                                        ## but there might be ; inside quoted strings;
+                                        ## read.table skips them efficiently, therefore:
+
+    punto.coma <- str_locate_all(a, ";")[[1]][,1]	# where the ";" are
+    comillas   <- str_locate_all(a, '"')[[1]][,1]	# where the '"' are
+    cortes     <- Filter( function(x) sum(comillas < x) %% 2 == 0, punto.coma )		# ";" not after an odd number of '"'
+                                                                                        # these are the proper "cuts"
+    inicios <- c(1, cortes + 1)
+    finales <- c(cortes - 1, str_length(a))
+
+    a <- str_sub(a, inicios, finales)
+
+    a <- a[!is.na(a)]
    
     a <- sub( "=", "//=//", a )
     a <- do.call(rbind, strsplit(a, "//=//" ))
