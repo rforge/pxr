@@ -6,10 +6,10 @@
 \title{ Convert an array into an object of the class px }
 
 \description{
-  This function convert a array object to a \code{px} object. Use the
-  code{dimnames} of the array to fill the \code{VALUES} list of
-  \code{px} object. Optionally it uses an object of type px as the
-  skeleton of the new object } 
+  This function converts an array object into a \code{px} object. It uses the
+  code{dimnames} of the array to fill the \code{VALUES} list of the
+  \code{px} object. Optionally it uses an object of type \code{px} as the
+  skeleton of the new object. } 
 
 \usage{
  as.px( x, ... )

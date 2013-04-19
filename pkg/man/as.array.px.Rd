@@ -10,7 +10,7 @@ This function extracts the data component from a px object as a \code{array}.
 }
 \arguments{
   \item{x}{A \code{px} object.}
-  \item{use.codes}{A logicar value to indicate whether to use CODES
+  \item{use.codes}{A logical value to indicate whether to use CODES
     instead of VALUES as  names of the levels: TRUE to use  CODES,
     defaut FALSE.
     Or a vector with the names of the variables

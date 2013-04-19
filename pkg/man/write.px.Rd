@@ -15,7 +15,7 @@ write.px(obj.px ,filename, encod="ISO_8859-1")
 \arguments{
   \item{obj.px}{ The name of a objest of class 'px' }
   \item{filename}{ The name of the PC-Axis file to create }
-  \item{encod}{A character string describing the encoding tu use in
+  \item{encod}{A character string describing the encoding to use in
     px file
     (see \code{\link{iconv}} for details).}
 }

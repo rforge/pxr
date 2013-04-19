@@ -21,7 +21,7 @@ read.px(filename, encoding = "latin1",
 }
 \details{
 This function reads data files in the PC-Axis format.
-The format is described in he two documents in the reference section.
+The format is described in the two documents in the reference section.
 
 According to them, null values can be encoded using ".", "..", "...", or "....". 
 
