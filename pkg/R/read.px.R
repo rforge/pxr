@@ -12,11 +12,12 @@
 #		20120329, cjgb: number strings in the DATA part can contain ";" as separators.
 #				Although deprecated, cases still lurk.
 #               20130228, cjgb: There can be ; inside quoted strings that create chaos
-#
+#               20130608   fvf: Ability to read files with keys in data area.
+#                               ":"  added to defaut na.string (EuroStat files)
 #################################################################
 
 read.px <- function(filename, encoding = "latin1", 
-                    na.strings = c('"."', '".."', '"..."', '"...."')) {
+                    na.strings = c('"."', '".."', '"..."', '"...."','":"')) {
 
     ## auxiliary functions ##
 
@@ -56,10 +57,17 @@ read.px <- function(filename, encoding = "latin1",
     ## end: auxiliary functions ##
 
     a <- scan(filename, what = "character", sep = "\n", quiet = TRUE, fileEncoding = encoding)
-    a <- paste(a, collapse = " ")	## " " necesario para que no junte lineas en DATA
+
+    # modification by  fvf: 130608 
+    # A <- PASTE(A, COLLAPSE = " ")     ## " " NECESARIO 
+    
+    a <- paste(a, collapse = "\n")      ## -- Se mantienen "CR/LF luego se quitaran selectivamente
 
     tmp <- strsplit( a, "DATA=" )[[1]]
-    tmp[2] <- gsub(";", "", tmp[2])			# removing ";" within DATA number strings
+
+    tmp[1] <- gsub("\n", " ", tmp[1])  # fvf[130608]: elimina CR de la cabecera
+    
+    tmp[2] <- gsub(";", "", tmp[2])    # removing ";" within DATA number strings
     a <- paste(tmp[1], "DATA=", tmp[2], sep = "")
 
     # modification by cjgb, 20130228 concerning line separators within quoted strings
@@ -86,7 +94,7 @@ read.px <- function(filename, encoding = "latin1",
     a$label     <- make.names(a$label)
     a$attribute <- make.names(a$attribute)
     a$value     <- as.character(a$value)
-
+    
     ## build a px object: list with px class attribute ##
 
     px <- sapply(unique( a$label ), function(label) make.list(a, label), simplify = FALSE)
@@ -99,11 +107,32 @@ read.px <- function(filename, encoding = "latin1",
     px$CODES  <- lapply(px$CODES,  break.clean )
 
     tmp <- gsub('"-"', 0, px$DATA$value)        # 0 can be encoded as "-"
-    dat <- textConnection(tmp)                  #much faster than with cleanDat (strsplit)
-    # dat <- textConnection(px$DATA$value) #much faster than with cleanDat (strsplit)
-    px$DATA$value <- scan(dat, na.strings = na.strings, quiet = TRUE)
-    close(dat)
-    
+
+    # fvf[130608]: add to to read files with keys in data area 
+    if ('KEYS' %in% a$label )    # Are There KEYS DATA$values ? 
+       { dat <- textConnection(tmp)
+         names(px$KEYS) -> names.keys
+         sapply(px$KEYS, function(e) {e} ) -> cont.keys
+         no.keys <- names(px$VALUES)[-match(names(px$KEYS),names(px$VALUES))]
+         c(lapply(names.keys,c),'')-> lista
+         names(lista)<- c(names.keys,'datanum')
+         scan(dat,what=lista,sep=',') -> pp
+         lapply(pp$datanum, function(e)
+                             scan(text=e,na.strings=':',quiet=T) )-> pp$datanum
+         px$DATA$value <- pp
+         grid.keys<- px$VALUES[no.keys]
+         grid.keys <-expand.grid(rev(grid.keys))
+         grid.keys[,rev(names(grid.keys)),drop=FALSE] -> px$DATA$datakeys
+         close(dat)
+       }  else
+       {
+         gsub("\n", " ", tmp)->tmp    # delete CR/LF of DATA area fvf[130608]
+         # dat <- textConnection(px$DATA$value) #much faster than with cleanDat (strsplit)
+         dat <- textConnection(tmp)
+         px$DATA$value <- scan(dat, na.strings = na.strings, quiet = TRUE)
+         close(dat)
+       }
+           
     class(px) <- "px"
     px
 }

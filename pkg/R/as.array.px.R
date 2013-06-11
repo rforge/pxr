@@ -25,12 +25,18 @@ as.array.px <- function(x, use.codes = FALSE,... ){
     
    x$VALUES[names.vals][there.codes] <- x$CODES[names.vals][there.codes] 
 
-   result <- array( x$DATA[[1]],
-                    unlist( lapply( x$VALUES[names.vals] ,length ) ),
-                    dimnames = x$VALUES[names.vals] )
-
-   names( dimnames(result) ) <- names.vals
-
+   if  ('KEYS' %in% names(x)) {
+       result <- pxK2df (x, use.codes) 
+       result <- xtabs(dat~., data=result)
+       attr(result,'class') <- NULL
+       attr(result,'call') <- NULL
+   } else {
+       result <- array( x$DATA[[1]],
+                        unlist( lapply( x$VALUES[names.vals] ,length ) ),
+                        dimnames = x$VALUES[names.vals] )
+       names( dimnames(result) ) <- names.vals
+   }
+   
    return(result)
   
 }

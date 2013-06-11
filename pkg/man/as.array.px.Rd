@@ -31,6 +31,9 @@ my.array  <- as.array( my.px )
 my.array2  <- as.array( my.px ,use.codes=TRUE)
 my.array3  <- as.array( my.px ,use.codes=c('municipios'))
 
+my.px2  <- read.px(system.file( "extdata", "example5.px", package = "pxR"))
+my.px2  <- as.array(my.px2)
+
 }
 \author{Francisco J. Viciana}
 \keyword{manip}
