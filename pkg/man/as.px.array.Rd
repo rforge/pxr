@@ -50,7 +50,7 @@ sum(my.data - as.array( my.px.object3) )
 
 ### Checks writing for missing data
 oo  <- read.px(  system.file( "extdata", "example2.px", package = "pxR"))
-aa  <-  as.array(oo)
+aa  <- as.array(oo)
 aa[ sample( 1:length(aa), 5 ) ] <- NA
 write.px( as.px(aa), file = 'tmp01.px' )
 

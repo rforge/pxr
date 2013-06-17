@@ -1,10 +1,9 @@
-
 #################################################################
 # 
 # File:         pxK2df.R
 # Purpose:      non-exported function.
 #               For use in "as.array.px" and "as.data.frame.px" 
-#		            Extracted px$DATA into a data.frama 
+#		            Extracted px$DATA into a data.frame 
 #                
 # Created:      20130611
 # Authors:      fvf
@@ -41,6 +40,3 @@ pxK2df <- function (px, use.codes = FALSE)  {
   }
   return (df.data)
 }
-
-
-

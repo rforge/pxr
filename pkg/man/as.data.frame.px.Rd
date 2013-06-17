@@ -54,8 +54,5 @@ Fernández, Emilio Torres
 \examples{
 my.px.object <- read.px(system.file( "extdata", "example.px", package = "pxR"))
 my.px.data   <- as.data.frame(my.px.object)
-
-my.px2  <- read.px(system.file( "extdata", "example5.px", package = "pxR"))
-my.px2  <- as.data.frame(my.px2)
 }
 \keyword{ manip }

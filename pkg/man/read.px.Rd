@@ -8,7 +8,7 @@ This function reads a PC-AXIS file (a text file with certain format) and creates
 }
 \usage{
 read.px(filename, encoding = "latin1", 
-        na.strings = c('"."', '".."', '"..."', '"...."','":"'))
+        na.strings = c('"."', '".."', '"..."', '"...."', '":"'))
 }
 
 \arguments{
