@@ -109,7 +109,7 @@ write.px <- function ( obj.px, filename, encod = "ISO_8859-1" )
   zz <- formatC(zz, format = 'f',
                 digits = as.numeric(obj.px$DECIMALS$value),
                 drop0trailing = T, flag = '-')
-  formatC(zz) -> zz
+  zz <- str_trim(zz) 
   zz[zz=='NA'] <- '".."'
  
   write ( zz, file=con, ncolumns=dim(zz)[1], append=T )
