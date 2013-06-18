@@ -9,7 +9,8 @@ Extraction of data from px into data.frame objects
 This function extracts the data component from a px object as a \code{data.frame}.
 }
 \usage{
-\S3method{as.data.frame}{px}( x, ..., use.codes = FALSE, warnings.as.errors = TRUE, direction = 'long')
+\S3method{as.data.frame}{px}( x, ..., use.codes = FALSE,
+                 warnings.as.errors = TRUE, direction = 'long')
 }
 \arguments{
   \item{x}{ a px object }
@@ -52,7 +53,8 @@ Fernández, Emilio Torres
   }
 
 \examples{
-my.px.object <- read.px(system.file( "extdata", "example.px", package = "pxR"))
+my.px.object <- read.px(system.file( "extdata", "example.px",
+                                              package = "pxR"))
 my.px.data   <- as.data.frame(my.px.object)
 }
 \keyword{ manip }
