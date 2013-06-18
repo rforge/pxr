@@ -23,6 +23,8 @@ write.px <- function ( obj.px, filename, encod = "ISO_8859-1" )
         gsub( '"$', "", x    )
   }
   
+  cdot <- function (e) { gsub('.','-',e,fixed=T)  }
+  
   con <- file( description = filename, open = "w", encoding = encod )
 
   wf  <- function ( lchart ) {
@@ -79,14 +81,14 @@ write.px <- function ( obj.px, filename, encod = "ISO_8859-1" )
          zz <- unquote(zz)         
          if (i %in% c('DECIMALS','SHOWDECIMALS','ELIMINATION')) # values without quote
                                                        # falla lectura PC-AXIS con comillas
-          {      wf( c(i,'=' , zz ,';\n')  )        
-          } else wf( c(i,'="', zz ,'";\n'))          
+          {      wf( c(cdot(i),'=' , zz ,';\n')  )        
+          } else wf( c(cdot(i),'="', zz ,'";\n'))          
          } else # meta with second name. Can be more one
          { for (l in names(obj.px[[i]]))
             {
               if (i %in% c('KEYS')) # values without quote
-                {      wf ( c(i,'("',l,'")=') )
-                } else wf ( c(i,'("',l,'")=\"') )              
+                {      wf ( c(cdot(i),'("',l,'")=') )
+                } else wf ( c(cdot(i),'("',l,'")=\"') )              
               wf ( paste(obj.px[[i]][[l]],collapse='","') )
               if (i %in% c('KEYS')) # values without quote
               { wf ( ';\n' ) } else wf ( '";\n' )              
