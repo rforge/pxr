@@ -88,7 +88,7 @@ as.px.array  <- function ( x, skeleton.px = NULL, list.keys = NULL, ...  )
     new.codes <- opx$CODES
     opx$CODES <- list()
                 
-    new.codes <- new.codes [names(old.codes) %in% names(opx$VALUES)]
+    new.codes <- new.codes [names(new.codes) %in% names(opx$VALUES)]
     new.codes <- new.codes[
                      sapply(new.codes, length) == 
                      sapply(opx$VALUES[names(opx$VALUES) %in% names(new.codes)],length)
