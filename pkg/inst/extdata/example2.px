@@ -15,6 +15,7 @@ VALUES("B")="B1","B2","B3";
 VALUES("C")="C1","C2";
 VALUES("A")="A1","A2","A3","A4";
 CODES("C")="001","002";
+CODES("B")="01","02","03";
 SOURCE="publics";
 LAST.UPDATED="20110728";
 DATA=

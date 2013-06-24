@@ -7,6 +7,7 @@
 # Authors:      fvf, cjgb, opl
 #
 # Modifications: 
+#                 [130624] fvf: Check consistency between CODES and VALUES
 #
 #################################################################
 
@@ -27,9 +28,8 @@ as.px.array  <- function ( x, skeleton.px = NULL, list.keys = NULL, ...  )
 # list.keys= list(MATRIX='xxxx', CONTENTS='cosas', MIA='prueba',
 #                 UNITS='personas', TITLE='titulos', DECIMAL='1') -> list.keys  
 {
-
-  if ( ! inherits(x , "array" ) )
-  stop('Error: object is not a "array"')
+    if ( ! is.array ( x ) ) 
+       stop('Error: object is not a "array"') 
  
   mkl1<- function (name,value)         {           
               zz <- list( list(value=value) ) 
@@ -76,8 +76,28 @@ as.px.array  <- function ( x, skeleton.px = NULL, list.keys = NULL, ...  )
              
      } else mkl1( 'STUB'   , rev(names(dimnames(x)) )) # Only one dim
 
+  
+  
  opx <- c( opx, list( 'VALUES' = dimnames(x) ) )
  opx <- c( opx, list( 'DATA'   = list( value = as.vector(x) ) ) )
+  
+  #  Delete skeleton.px$CODES: unused or inconsistent 
+  
+  if ( ! is.null(opx$CODES) ) {
+
+    new.codes <- opx$CODES
+    opx$CODES <- list()
+                
+    new.codes <- new.codes [names(old.codes) %in% names(opx$VALUES)]
+    new.codes <- new.codes[
+                     sapply(new.codes, length) == 
+                     sapply(opx$VALUES[names(opx$VALUES) %in% names(new.codes)],length)
+                     ]
+    
+    opx$CODES <- new.codes 
+    
+  }
+      
  class( opx ) <- "px"
   
  return(opx)

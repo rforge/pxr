@@ -14,6 +14,7 @@
 #               20130228, cjgb: There can be ; inside quoted strings that create chaos
 #               20130608   fvf: Ability to read files with keys in data area.
 #                               ":"  added to defaut na.string (EuroStat files)
+#               20130624:  use str_split (line 91) to read DATA area
 #################################################################
 
 read.px <- function(filename, encoding = "latin1", 
@@ -87,7 +88,8 @@ read.px <- function(filename, encoding = "latin1",
     a <- a[a != ""]
    
     a <- sub( "=", "//=//", a )
-    a <- do.call(rbind, strsplit(a, "//=//" ))
+    a <- do.call(rbind, str_split(a, "//=//" ))     # change strsplit by str-split. In big px-files:
+                                                    #  "Error: C stack usage is too close to the limit"
     a <- data.frame(cbind(get.attributes(a[, 1]), a[, 2]))
     colnames(a) <- c("label", "attribute", "value")
 
