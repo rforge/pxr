@@ -55,12 +55,23 @@ aa[ sample( 1:length(aa), 5 ) ] <- NA
 write.px( as.px(aa), file = 'tmp01.px' )
 
 ### append and modify keys
-write.px(as.px.array(aa,skeleton.px=oo),file='tmp02.px')
-write.px(as.px.array(aa,
+write.px( as.px.array(aa,skeleton.px=oo), file='tmp02.px' )
+write.px( as.px.array( aa,
              list.keys= list(MATRIX='xxx', CONTENTS='new data',
                              NEWKEY='an other key',
                              UNITS='people', TITLE='My Title') 
-                     ),file='tmp03.px')
+                     ), file='tmp03.px')
+
+### collapses a dimension
+oo  <- read.px( system.file( "extdata", "example2.px", package = "pxR")))
+aa  <- as.array(oo) 
+aa  <- apply( oo, 1:2, sum ) 
+oo2 <- as.px.array( aa, skeleton.px = oo ) 
+write.px( oo2, file = 'tmp04.px' ) 
+
+
+### remove temporal files
+remove
 
 }
 
