@@ -60,18 +60,17 @@ write.px( as.px.array( aa,
              list.keys= list(MATRIX='xxx', CONTENTS='new data',
                              NEWKEY='an other key',
                              UNITS='people', TITLE='My Title') 
-                     ), file='tmp03.px')
+                     ), file='tmp02.px')
 
 ### collapses a dimension
-oo  <- read.px( system.file( "extdata", "example2.px", package = "pxR")))
+oo  <- read.px( system.file( "extdata", "example2.px", package = "pxR"))
 aa  <- as.array(oo) 
-aa  <- apply( oo, 1:2, sum ) 
+aa  <- apply( aa, 1:2, sum ) 
 oo2 <- as.px.array( aa, skeleton.px = oo ) 
-write.px( oo2, file = 'tmp04.px' ) 
-
+write.px (oo2, file='tmp03.px')
 
 ### remove temporal files
-remove
+file.remove('tmp04.px','tmp03.px','tmp02.px','tmp01.px')
 
 }
 
