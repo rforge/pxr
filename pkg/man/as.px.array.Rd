@@ -7,26 +7,40 @@
 
 \description{
   This function converts an array object into a \code{px} object. It uses the
-  code{dimnames} of the array to fill the \code{VALUES} list of the
+  \code{dimnames} of the array to fill the \code{VALUES} list of the
   \code{px} object. Optionally it uses an object of type \code{px} as the
   skeleton of the new object. } 
 
 \usage{
- as.px( x, ... )
-\S3method{as.px}{array}( x, skeleton.px = NULL, list.keys = NULL, ...  )
+as.px(x,... )
+\S3method{as.px}{array}(x, skeleton.px = NULL, list.keys = NULL, ...)
 }
 
 \arguments{
-  \item{x}{ A array with the data entered in the \code{px} object}
-  \item{skeleton.px}{ Properties not included in the array will be taken of this \code{px} object }
-  \item{list.keys}{ A optional list with pair of keys and values to append and modify \code{px} object}
+  \item{x}{An array with the data required to build the \code{px} object}
+  \item{skeleton.px}{A \code{px} object with metadata that will be used in the new \code{px} object}
+  \item{list.keys}{A optional list of metadata pairs}
   \item{...}{ Other arguments that can be passed to the function }
 
 }
 \details{
-  This function is used to transfer information from an array
-  R objects to a PX objects.
-}
+  A \code{px} object is the internal representation in R of a PC-Axis file. As such, it contains both
+data and metadata. 
+
+  The data to populate the \code{px} object comes from \code{x}, the first argument of the function. As yet,
+it only accepts arrays. These arrays need to have 'named \code{dimnames}', i.e., its \code{dimnames} attribute 
+needs to be a list with named entries.
+
+  There are two compatible methods to provide metadata information. The first one is via \code{skeleton.px}, a
+\code{px} object whose metadata (title, etc.) is to be recycled in the new object. In addition to that, \code{list.keys} 
+can be used to pass metadata in key-value pairs as shown in the examples below.
+
+  Metadata provided in \code{list.keys} has priority over metadata coming from \code{skeleton.px}. Also, note that the 
+metadata items used to name the variables and their labels are neither extracted from \code{skeleton.px} nor \code{px} but
+from the \code{dimnames} attribute of \code{x}. 
+
+  Few checks are made to guarantee that metadata keys conform to the PC-Axis standard.
+} 
 \value{ a \code{px} object }
 
 \author{Francisco J. Viciana, Carlos J. Gil Bellosta,}
@@ -43,34 +57,8 @@ my.px.object  <- read.px( system.file( "extdata", "example.px", package = "pxR")
 my.data       <- as.array( my.px.object )
 my.px.object2 <- as.px( my.data )
 my.px.object3 <- as.px( my.data, skeleton.px = my.px.object ) 
-
-### export data checks
-sum(my.data - as.array( my.px.object2) )
-sum(my.data - as.array( my.px.object3) )
-
-### Checks writing for missing data
-oo  <- read.px(  system.file( "extdata", "example2.px", package = "pxR"))
-aa  <- as.array(oo)
-aa[ sample( 1:length(aa), 5 ) ] <- NA
-write.px( as.px(aa), file = 'tmp01.px' )
-
-### append and modify keys
-write.px( as.px.array(aa,skeleton.px=oo), file='tmp02.px' )
-write.px( as.px.array( aa,
-             list.keys= list(MATRIX='xxx', CONTENTS='new data',
-                             NEWKEY='an other key',
-                             UNITS='people', TITLE='My Title') 
-                     ), file='tmp02.px')
-
-### collapses a dimension
-oo  <- read.px( system.file( "extdata", "example2.px", package = "pxR"))
-aa  <- as.array(oo) 
-aa  <- apply( aa, 1:2, sum ) 
-oo2 <- as.px.array( aa, skeleton.px = oo ) 
-write.px (oo2, file='tmp03.px')
-
-### remove temporal files
-file.remove('tmp04.px','tmp03.px','tmp02.px','tmp01.px')
+my.px.object4 <- as.px( my.data, list.keys = list(MATRIX = "xxx", CONTENTS = "new data",
+                             NEWKEY = "another key", UNITS = "people", TITLE = "My Title") )
 
 }
 

@@ -7,38 +7,22 @@
 # Authors:      fvf
 #
 # Modifications: opl, fvf (20130618)
+#               cjgb, 20130813: adapted to the new internal structure
 #
 #################################################################
 
 as.array.px <- function(x, use.codes = FALSE,... ){
   
-   names.vals      <- c( rev(x$HEADING$value), rev( x$STUB$value ) )
-    
-   there.codes <- ! ( sapply(x$CODES[names.vals],is.null) )
-    
-   if ( is.logical( use.codes ) & use.codes == FALSE ) {
-        there.codes <- rep(FALSE,length(there.codes))  # don't use codes
-   } else if  ( is.character( use.codes ) ) {
-                 with.codes <- ! is.na(match(names.vals,use.codes))
-                 there.codes <-  with.codes & there.codes   
-     } 
-    
-   x$VALUES[names.vals][there.codes] <- x$CODES[names.vals][there.codes] 
-
-   if  ('KEYS' %in% names(x)) {
-         dd <- pxK2df (x, use.codes) 
-         result <- xtabs(dat~., data=dd)
-         result[ xtabs(dat==dat~. ,data=dd ) == 0] <- NA
-         attr(result,'class') <- NULL
-         attr(result,'call')  <- NULL
-   } else {
-       result <- array( x$DATA[[1]],
-                        unlist( lapply( x$VALUES[names.vals] ,length ) ),
-                        dimnames = x$VALUES[names.vals] )
-       names( dimnames(result) ) <- names.vals
-   }
-   
-   return(result)
+  # extract the df component of the px object and
+  # use code already in place in as.data.frame 
+  # for codes
+  df <- as.data.frame(x, use.codes = use.codes)
+  
+  # use all cols but "value" as dimensions in the output array
+  dim.names <- setdiff(colnames(df), "value")
+  res       <- acast(df, as.list( dim.names ))
+  names( dimnames(res) ) <- dim.names
+  res
   
 }
 

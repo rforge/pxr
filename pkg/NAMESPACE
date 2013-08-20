@@ -1,7 +1,13 @@
+importFrom("reshape2", acast, dcast)
+importFrom("stringr", str_split)
+importFrom("plyr", mapvalues)
+import("RJSONIO")
+
 export( read.px )
 export( write.px )
 export( as.px )
 export( as.px.array )
+export( write.json.stat )
 
 S3method(as.data.frame, px)
 S3method(as.array, px)
