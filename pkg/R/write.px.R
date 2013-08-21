@@ -31,7 +31,7 @@ write.px <- function ( obj.px, filename, fileEncoding = "ISO-8859-1" )
     
     
   wf  <- function ( ..., my.encoding = ifelse(fileEncoding == "ISO-8859-1", "latin1", "utf8") ) {
-    cadena <- paste(..., collapse = "")
+    cadena <- paste(..., sep = "")
     cadena <- iconv(cadena, my.encoding)
     cat( cadena, file = con, sep = "" ) 
   }
