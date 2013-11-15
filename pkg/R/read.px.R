@@ -15,6 +15,9 @@
 #               20130608   fvf: Ability to read files with keys in data area.
 #                               ":"  added to defaut na.string (EuroStat files)
 #               20130624:  use str_split (line 91) to read DATA area
+#               20130917, cjgb: changes to prevent errors with EOL characteres
+#               20131115, cjgb: some files do not have heading (or stub): only one of 
+#                               them is really required
 #################################################################
 
 read.px <- function(filename, encoding = "latin1", 
@@ -58,7 +61,7 @@ read.px <- function(filename, encoding = "latin1",
     tmp <- strsplit( a, "DATA=" )[[1]]
     tmp[1] <- gsub("\n", " ", tmp[1])  # fvf[130608]: elimina CR de la cabecera
     
-    tmp[2] <- gsub(";", "", tmp[2])    # removing ";" within DATA number strings
+    tmp[2] <- gsub(";.*", "", tmp[2])    # removing ";" (and everything following it) within DATA number strings
     a <- paste(tmp[1], "DATA=", tmp[2], sep = "")
 
     ## modification by cjgb, 20130228 concerning line separators within quoted strings
@@ -117,11 +120,11 @@ read.px <- function(filename, encoding = "latin1",
 
     ## these metadata keys contain vectors (comma separated)
     ## we need to split them (and clean the mess: extra spaces, etc.)
-    px$STUB$value    <- make.names(break.clean(px$STUB$value))
-    px$HEADING$value <- make.names(break.clean(px$HEADING$value))
+    px$STUB$value    <- if(!is.null(px$STUB)) make.names(break.clean(px$STUB$value))
+    px$HEADING$value <- if(!is.null(px$HEADING)) make.names(break.clean(px$HEADING$value))
 
-    px$VALUES <- lapply(px$VALUES, break.clean )
-    px$CODES  <- lapply(px$CODES,  break.clean )
+    px$VALUES <- lapply(px$VALUES, break.clean)
+    px$CODES  <- lapply(px$CODES,  break.clean)
 
     #tmp <- gsub('"-"', 0, px$DATA$value)        # 0 can be encoded as "-"
     
