@@ -12,11 +12,12 @@
 #               cjgb, 20130811: fixed encoding issues (testing)
 #               cjgb, 20130813: we do not generate files using KEYS (i.e., if present,
 #                         the KEYS part needs to be ignored)
-#
+#               cjgb, 20131117: some users want to specify heading & stub precisely
+#                         in order to control the shape of the resulting matrix
 #################################################################
 
 
-write.px <- function ( obj.px, filename, fileEncoding = "ISO-8859-1" )
+write.px <- function ( obj.px, filename, heading = NULL, stub = NULL, fileEncoding = "ISO-8859-1" )
 {
   
   if ( ! inherits( obj.px, "px" ) )
@@ -28,7 +29,6 @@ write.px <- function ( obj.px, filename, fileEncoding = "ISO-8859-1" )
   
   requote <- function(x)            # adds dquotes (") to character vectors
     paste( '"', unquote(x), '"', sep = "")
-    
     
   wf  <- function ( ..., my.encoding = ifelse(fileEncoding == "ISO-8859-1", "latin1", "utf8") ) {
     cadena <- paste(..., sep = "")
@@ -75,6 +75,17 @@ write.px <- function ( obj.px, filename, fileEncoding = "ISO-8859-1" )
  
   order.px  <- charmatch(names(obj.px), order.kw, nomatch=999)   # keyword no in list to end
   new.order <- setdiff( names(obj.px)[order(order.px)], "DATA" ) # all but "DATA"
+  
+  if(! is.null(heading)){
+    if(is.null(stub))
+      stop("If heading is specified, you need also specify the stub parameter.")
+    
+    if(! setequal(c(heading, stub), c(obj.px$HEADING$value, obj.px$STUB$value)) )
+      stop("Specified heading and stub parameters differ from those in the px object")
+    
+    obj.px$HEADING$value <- heading
+    obj.px$STUB$value    <- stub
+  }
  
   ## open the connection and close automatically on exit
   con <- file( description = filename, open = "w", encoding = fileEncoding )
@@ -115,14 +126,16 @@ write.px <- function ( obj.px, filename, fileEncoding = "ISO-8859-1" )
   # DATA part
   wf('DATA=\n')
   
-  zz <- formatC(as.array( obj.px ),
+  zz <- formatC(as.array(obj.px),
                 format = 'f',
                 digits = as.numeric(obj.px$DECIMALS$value),
                 drop0trailing = T, flag = '-')
   #zz <- str_trim(zz) 
   zz <- gsub("NA", '".."', zz)
- 
-  write(zz, file = con, ncolumns = dim(zz)[1], append = T )
+  
+  zz <- aperm(zz, c(rev(obj.px$HEADING$value), rev(obj.px$STUB$value)))
+  write(zz, file = con, ncolumns = sum( dim(zz)[1:length(obj.px$HEADING$value)] ), append = T )
+  
   wf(";\n")
 }  
 

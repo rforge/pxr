@@ -9,13 +9,22 @@ Write a PC-Axis file
 
 }
 \usage{
-write.px(obj.px, filename, fileEncoding = "ISO-8859-1")
+write.px(obj.px, filename, heading = NULL, stub = NULL,
+         fileEncoding = "ISO-8859-1")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{obj.px}{ The name of a objest of class 'px' }
   \item{filename}{ The name of the PC-Axis file to create }
-  \item{fileEncoding}{A character string describing the encoding to use in px file (see \code{\link{iconv}} for details).}
+  \item{heading}{ An optional character vector with the names of variables in the HEADING part of the output file }
+  \item{stub}{ An optional character vector with the names of the variables in the STUB part of the output file }
+  \item{fileEncoding}{A character string describing the encoding to use in px file (see \code{\link{iconv}} for details)}
+}
+
+\details{
+  By default, the output file will have a single variable in the HEADING part of the file (columns in the matrix). 
+
+  It is possible to override the default by providing the \code{heading} and \code{stub} parameters. These are optional, non-overlapping, exhaustive character vectors of names of variables in the output matrix. 
 }
 
 \references{
@@ -35,7 +44,12 @@ Francisco J. Viciana Fernández, Oscar Perpiñan Lamigueiro, Carlos J. Gil Bello
 }
 \examples{
 opx1 <- read.px(system.file( "extdata", "example.px", package = "pxR"))  
-\dontrun{write.px (opx1, file = "opx.px")}
+\dontrun{
+	write.px(opx1, file = "opx.px")
+	write.px(opx1, file = "opx.px", 
+                   heading = c("sexo", "edad"),
+                   stub = "municipios")
+}
 }
 
 \keyword{ manip }

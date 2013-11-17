@@ -8,9 +8,9 @@ TITLE="Población por sexo, municipios y edad (grupos quinquenales).";
 CONTENTS="Población";
 UNITS="personas";
 STUB="sexo","municipios";
-HEADING="edad (grupos quinquenales)";
+HEADING="edad";
 VALUES("sexo")="Ambos sexos","Varones","Mujeres";
-VALUES("edad (grupos quinquenales)")="Total"," 0-4"," 05-09"," 10-14 "," 15-19",
+VALUES("edad")="Total"," 0-4"," 05-09"," 10-14 "," 15-19",
 " 20-24"," 25-29"," 30-34"," 35-39"," 40-44",
 " 45-49"," 50-54"," 55-59"," 60-64"," 65-69"," 70-74"," 75-79"," 80-84"," 85 y más";
 VALUES("municipios")= "Total",
@@ -382,10 +382,10 @@ CODES("municipios")="000",
 "42218 ",
 "42219 ";
 PRESTEXT("sexo")=0;
-PRESTEXT("edad (grupos quinquenales)")=0;
+PRESTEXT("edad")=0;
 ELIMINATION("sexo")="Ambos sexos";
 ELIMINATION("municipios")="Total";
-ELIMINATION("edad (grupos quinquenales)")="Total";
+ELIMINATION("edad")="Total";
 DECIMALS=0;
 SHOWDECIMALS=0;
 LAST-UPDATED="05/10/99";
