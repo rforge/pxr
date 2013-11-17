@@ -78,7 +78,7 @@ write.px <- function ( obj.px, filename, fileEncoding = "ISO-8859-1" )
  
   ## open the connection and close automatically on exit
   con <- file( description = filename, open = "w", encoding = fileEncoding )
-  on.exit( close(con) )
+  on.exit(close(con))
   
   ## write new file 
   #cat('', file = con, append = F) # init file
@@ -120,7 +120,7 @@ write.px <- function ( obj.px, filename, fileEncoding = "ISO-8859-1" )
                 digits = as.numeric(obj.px$DECIMALS$value),
                 drop0trailing = T, flag = '-')
   #zz <- str_trim(zz) 
-  zz <- gsub("NA", "..", zz)
+  zz <- gsub("NA", '".."', zz)
  
   write(zz, file = con, ncolumns = dim(zz)[1], append = T )
   wf(";\n")
