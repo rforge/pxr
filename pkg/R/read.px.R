@@ -18,6 +18,8 @@
 #               20130917, cjgb: changes to prevent errors with EOL characteres
 #               20131115, cjgb: some files do not have heading (or stub): only one of 
 #                               them is really required
+#               20131118, cjgb: fixed a bug happening when missing (i.e. "..") was the last value in DATA
+#                               fixing it required that the last quote was not eliminated (same for first quote)
 #################################################################
 
 read.px <- function(filename, encoding = "latin1", 
@@ -33,9 +35,6 @@ read.px <- function(filename, encoding = "latin1",
         x <- gsub( "([A-Z-]*)\\((.*)\\).*", "\\1;\\2", x ) ## separates label-attribute with ";"
         x <- ldply(strsplit(x, ";"), 
                    function(y) c(y, "value")[1:2])
-#         x[,2] <- clean.spaces(gsub('\\"', "", x[,2]))
-#         x[,1] <- clean.spaces(x[,1])
-#         x
     }
 
     break.clean <- function(x) {
@@ -43,23 +42,16 @@ read.px <- function(filename, encoding = "latin1",
         x[! x %in% c("," , "")]                                 ## and drops spurious seps
     }
 
-#     make.list <- function( dat, my.label ){
-#       dat <- subset(dat, label == my.label, select = c(attribute, value))
-#       dat$value <- gsub('^\\"|\\"$', "", dat$value) # elimina comillas por delante|detrás
-#       my.list <- as.list(dat$value)
-#       names( my.list ) <- dat$attribute
-#       my.list
-#     }
 
     ## end: auxiliary functions ##
 
     a <- scan(filename, what = "character", sep = "\n", quiet = TRUE, fileEncoding = encoding)
 
     # modification by  fvf: 130608 
-    a <- paste(a, collapse = "\n")      ## -- Se mantienen "CR/LF luego se quitaran selectivamente
+    a <- paste(a, collapse = "\n")       # Se mantienen "CR/LF luego se quitaran selectivamente
 
     tmp <- strsplit( a, "DATA=" )[[1]]
-    tmp[1] <- gsub("\n", " ", tmp[1])  # fvf[130608]: elimina CR de la cabecera
+    tmp[1] <- gsub("\n", " ", tmp[1])    # fvf[130608]: elimina CR de la cabecera
     
     tmp[2] <- gsub(";.*", "", tmp[2])    # removing ";" (and everything following it) within DATA number strings
     a <- paste(tmp[1], "DATA=", tmp[2], sep = "")
@@ -91,42 +83,30 @@ read.px <- function(filename, encoding = "latin1",
                                                         
     a <- data.frame(cbind(get.attributes(a[, 1]), a[, 2]))
     colnames(a) <- c("label", "attribute", "value")
-
-#     a$label     <- make.names(a$label)
-#     a$attribute <- make.names(a$attribute)
-#     a$value     <- as.character(a$value)
-#     a$value     <- gsub('^\\"|\\"$', "", a$value) # removes " at beginning / end
-    
-    ## build a px object: list with px class attribute ##
-
-#     px <- sapply(unique( a$label ), function(label) make.list(a, label), simplify = FALSE)
-#     
-#     px <- dlply(a, "label", function(dat){
-#       
-#       my.list <- as.list(dat$value)
-#       names( my.list ) <- dat$attribute
-#       my.list
-#       
-#     })
-    
+  
+    ## build a px object: list with px class attribute ##  
     
     a$label     <- make.names(clean.spaces(a$label))
     a$attribute <- make.names(clean.spaces(gsub('\\"', "", a$attribute)))
     
-    a.value        <- gsub('^\\"|\\"$', "", a$value)   # removes " at beginning / end
-    names(a.value) <- a$attribute
+    # need to avoid that quotes are removed in DATA part because of a bug:
+    # a case was reported where the data part ended in ".." and the last quote was erased
+    # and this affected the scan function below
+    a.data                     <- as.character(a[a$label == "DATA", "value"])
+    a.value                    <- gsub('^\\"|\\"$', "", a$value)   # removes " at beginning / end
+    a.value[a$label == "DATA"] <- a.data
+    names(a.value)             <- a$attribute
     
     px <- tapply(a.value, a$label, as.list)    
 
     ## these metadata keys contain vectors (comma separated)
     ## we need to split them (and clean the mess: extra spaces, etc.)
-    px$STUB$value    <- if(!is.null(px$STUB)) make.names(break.clean(px$STUB$value))
+    px$STUB$value    <- if(!is.null(px$STUB))    make.names(break.clean(px$STUB$value))
     px$HEADING$value <- if(!is.null(px$HEADING)) make.names(break.clean(px$HEADING$value))
 
     px$VALUES <- lapply(px$VALUES, break.clean)
     px$CODES  <- lapply(px$CODES,  break.clean)
 
-    #tmp <- gsub('"-"', 0, px$DATA$value)        # 0 can be encoded as "-"
     
     #### read the data part into a 'melted' dataframe ###
     
@@ -175,7 +155,8 @@ read.px <- function(filename, encoding = "latin1",
       tmp <- gsub("\n", " ", tmp)                 # delete CR/LF of DATA area fvf[130608]
 
       tc  <- textConnection(tmp); on.exit( close(tc) )
-      raw <- scan(tc, na.strings = na.strings, quiet = TRUE)
+      raw <- scan(tc, na.strings = na.strings, quote = NULL, quiet = TRUE)
+      #raw <- scan(tc, na.strings = na.strings, quiet = TRUE)
       
       names.vals <- c( rev(px$HEADING$value), rev( px$STUB$value ) )
       output.grid <- data.frame(do.call(expand.grid, px$VALUES[names.vals]))
