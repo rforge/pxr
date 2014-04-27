@@ -99,7 +99,7 @@ write.px <- function ( obj.px, filename, heading = NULL, stub = NULL, fileEncodi
     
     # these are exceptions: no quotes
     # e.g.: 'DECIMALS=0;'
-    if( key %in% c('DECIMALS', 'SHOWDECIMALS', 'ELIMINATION')){
+    if( key %in% c('DECIMALS', 'SHOWDECIMALS', 'ELIMINATION', 'COPYRIGHT', 'DESCRIPTIONDEFAULT', 'DAYADJ', 'SEASADJ')){
       wf( key, "=")
       wf( unquote(obj.px[[key]]$value) )
       wf(';\n')
