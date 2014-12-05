@@ -96,10 +96,13 @@ write.px <- function ( obj.px, filename, heading = NULL, stub = NULL, fileEncodi
   
   ## metadata part
   for (key in new.order ) {
+
+    if (length(obj.px[[key]]) == 0)
+      next				# this fixes a bug where length(CODES) == 0    
     
     # these are exceptions: no quotes
     # e.g.: 'DECIMALS=0;'
-    if( key %in% c('DECIMALS', 'SHOWDECIMALS', 'ELIMINATION', 'COPYRIGHT', 'DESCRIPTIONDEFAULT', 'DAYADJ', 'SEASADJ')){
+    if (key %in% c('DECIMALS', 'SHOWDECIMALS', 'ELIMINATION', 'COPYRIGHT', 'DESCRIPTIONDEFAULT', 'DAYADJ', 'SEASADJ')){
       wf( key, "=")
       wf( unquote(obj.px[[key]]$value) )
       wf(';\n')
