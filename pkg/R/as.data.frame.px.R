@@ -10,7 +10,7 @@
 #    20120323, cjgb: added error check: variables and codes should have the same length
 #    20120402, cjgb: warnings can be either errors or warnings depending on paranoia level
 #    20120402, cjgb: adapted to the new px object format (where DATA is already a df)
-#
+#    20141222. fvf:  bug in "wide" direction
 #################################################################
 
 as.data.frame.px <- function( x, ..., use.codes = FALSE, warnings.as.errors = TRUE, direction = "long"){
@@ -36,7 +36,9 @@ as.data.frame.px <- function( x, ..., use.codes = FALSE, warnings.as.errors = TR
      
   ## do we need to reshape?
   if (direction == "wide")
-    dcast(dat, list(x$HEADING$value, x$STUB$value))
+    # fvf.20121222: The order of variables rows and pivots-columns was inverted
+    # dcast(dat, list(x$HEADING$value, x$STUB$value))
+    dcast(dat, list(x$STUB$value,x$HEADING$value))
   else
     dat
 }

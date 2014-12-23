@@ -21,7 +21,7 @@ my.px.object2 <- as.px( my.data )
 my.px.object3 <- as.px( my.data, skeleton.px = my.px.object )
 my.px.object4 <- as.px( my.data, list.keys = list(MATRIX = "xxx", CONTENTS = "new data",
                               NEWKEY = "another key", UNITS = "people", TITLE = "My Title") )
- 
+
  
 ### export data checks
 stopifnot( sum( abs(my.data - as.array( my.px.object2)) ) < 1e-6 )
@@ -49,7 +49,7 @@ aa  <- apply( aa, 1:2, sum )
 oo2 <- as.px.array( aa, skeleton.px = oo ) 
 write.px (oo2, filename='tmp03.px')
  
-### remove temporal files
+### remove temporal file
 file.remove('tmp04.px','tmp03.px','tmp02.px','tmp01.px')
  
  

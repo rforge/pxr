@@ -20,6 +20,7 @@
 #                               them is really required
 #               20131118, cjgb: fixed a bug happening when missing (i.e. "..") was the last value in DATA
 #                               fixing it required that the last quote was not eliminated (same for first quote)
+#               20141222, fvf:  fixing some bug in relation to read files with KEYS (sparse array)
 #################################################################
 
 read.px <- function(filename, encoding = "latin1", 
@@ -80,8 +81,11 @@ read.px <- function(filename, encoding = "latin1",
     # change strsplit by str-split. In big px-files:
     #  "Error: C stack usage is too close to the limit"
     a <- do.call(rbind, str_split(a, "=", n = 2))   
-                                                        
-    a <- data.frame(cbind(get.attributes(a[, 1]), a[, 2]))
+
+    ## fvf.20141222: not chage to factor: ++ stringsAsFactors=F)
+    a <- data.frame(cbind(get.attributes(a[, 1]), a[, 2], stringsAsFactors=F) )
+
+    
     colnames(a) <- c("label", "attribute", "value")
   
     ## build a px object: list with px class attribute ##  
@@ -105,8 +109,23 @@ read.px <- function(filename, encoding = "latin1",
     px$HEADING$value <- if(!is.null(px$HEADING)) make.names(break.clean(px$HEADING$value))
 
     px$VALUES <- lapply(px$VALUES, break.clean)
-    px$CODES  <- lapply(px$CODES,  break.clean)
 
+    # fvf.20141222: if  there aren not  CODES do not create CODES
+    if (!is.null(px$CODES)) {
+       px$CODES <- lapply(px$CODES, break.clean) }
+
+    # fvf.20141222: Sustituye ["~~~~" "~~~~~"] por ["~~~~~"\n"~~~~"]  en 
+    # campos multilinea con retornos perdidos (simplifica la lectura humana)
+ 
+    step.string <-  function(e) {
+    if(!is.null(e$value)) {
+        e$value <-  gsub('"[[:space:]]+"', '"\n"', e$value)          
+        e
+      } else e
+    }
+    lapply(px, step.string )  -> px
+
+    
     
     #### read the data part into a 'melted' dataframe ###
     
@@ -133,10 +152,17 @@ read.px <- function(filename, encoding = "latin1",
       colnames(keys.part) <- names(px$KEYS)
       
       ## change CODES (if any) in keys part to VALUES (consistency issue)
-      for (col.name in colnames(keys.part)[unlist(px$KEYS) == "CODES"])
-        keys.part[[col.name]] <- mapvalues(keys.part[[col.name]], 
-                                           from = px$CODES[[col.name]], 
-                                           to   = px$VALUES[[col.name]])
+      # for (col.name in colnames(keys.part)[unlist(px$KEYS) == "CODES"])
+      #  keys.part[[col.name]] <- mapvalues(keys.part[[col.name]], 
+      #                                     from = px$CODES[[col.name]], 
+      #                                     to   = px$VALUES[[col.name]])
+      # fvf.20141222:
+      for (col.name in colnames(keys.part) ) {
+            if (px$KEYS[[col.name]]=='CODES')   {            
+                  keys.part[[col.name]]  <- factor(keys.part[[col.name]],levels= px$CODES[[col.name]] ) 
+                  levels(keys.part[[col.name]]) <- px$VALUES[[col.name]]  ## all levels a VALUES
+            } else  keys.part[[col.name]]  <- factor(keys.part[[col.name]],levels= px$VALUES[[col.name]] )           
+      }
       
       
       ## extract and process the variables that are not keys

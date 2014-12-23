@@ -10,6 +10,7 @@ Write a PC-Axis file
 }
 \usage{
 write.px(obj.px, filename, heading = NULL, stub = NULL,
+         keys = NULL , write.na = FALSE, write.zero= FALSE ,
          fileEncoding = "ISO-8859-1")
 }
 %- maybe also 'usage' for other objects documented here.
@@ -18,6 +19,10 @@ write.px(obj.px, filename, heading = NULL, stub = NULL,
   \item{filename}{ The name of the PC-Axis file to create }
   \item{heading}{ An optional character vector with the names of variables in the HEADING part of the output file }
   \item{stub}{ An optional character vector with the names of the variables in the STUB part of the output file }
+  \item{keys}{If there are KEYS,  in the DATA area  the KEYS variables
+    are  use to identify the row datacells. This is a more efficient way of storing sparse array}
+  \item{write.na}{ The rows with no data should be written in DATA area}
+  \item{write.zero}{ The rows with zero should be written in DATA area}  
   \item{fileEncoding}{A character string describing the encoding to use in px file (see \code{\link{iconv}} for details)}
 }
 
@@ -49,6 +54,8 @@ opx1 <- read.px(system.file( "extdata", "example.px", package = "pxR"))
 	write.px(opx1, file = "opx.px", 
                    heading = c("sexo", "edad"),
                    stub = "municipios")
+        write.px(opx1, filename  = "opx.px", 
+                 keys = c("municipios","edad")  )
 }
 }
 
