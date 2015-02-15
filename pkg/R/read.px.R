@@ -21,9 +21,14 @@
 #               20131118, cjgb: fixed a bug happening when missing (i.e. "..") was the last value in DATA
 #                               fixing it required that the last quote was not eliminated (same for first quote)
 #               20141222, fvf:  fixing some bug in relation to read files with KEYS (sparse array)
+#               20150211, fvf:  The parameter "encoding" is NULL by default. "encoding" is determined by 
+#                               the file itself: if CHARSET="ANSI" then "latin1" else "CP437".
+#               20150212. fvf:  I have to delete => 20130917, cjgb:  tmp[2] <- gsub(";.*", "", tmp[2])    
+#                               many px-files have a semicolon at the end of line in DATA area:
+#                               i.e: read.px('http://www.ine.es/pcaxisdl//t20/e245/p05/a2002/l0/00004001.px')  
 #################################################################
 
-read.px <- function(filename, encoding = "latin1", 
+read.px <- function(filename, encoding = NULL, 
                     na.strings = c('"."', '".."', '"..."', '"...."', '":"')) {
 
     ## auxiliary functions ##
@@ -45,6 +50,16 @@ read.px <- function(filename, encoding = "latin1",
 
 
     ## end: auxiliary functions ##
+    
+    # modification by  fvf (150211): Determining the character encoding used in the file => encoding
+    
+    if (is.null(encoding)) {
+        charset  <- readLines ( filename, 2 )   # read the 
+        charset  <- charset[ grepl( 'CHARSET', charset, ignore.case = T ) ]
+        if ( length(charset) != 1) {
+                 encoding <- "latin1"  
+        }  else  encoding <- "CP437"  # comprobado en debian y osx
+    }
 
     a <- scan(filename, what = "character", sep = "\n", quiet = TRUE, fileEncoding = encoding)
 
@@ -54,7 +69,11 @@ read.px <- function(filename, encoding = "latin1",
     tmp <- strsplit( a, "DATA=" )[[1]]
     tmp[1] <- gsub("\n", " ", tmp[1])    # fvf[130608]: elimina CR de la cabecera
     
-    tmp[2] <- gsub(";.*", "", tmp[2])    # removing ";" (and everything following it) within DATA number strings
+    # tmp[2] <- gsub(";.*", "", tmp[2])   # removing ";" (and everything following it) within DATA number strings     
+    tmp[2] <- gsub(";", "", tmp[2])       # fvf[150212] (la modificacion rev 92 a 94) da multiples problemas en INEBase                                          
+                                          # i.e: read.px('http://www.ine.es/pcaxisdl//t20/e245/p05/a2002/l0/00004001.px')
+                                          # en muchos ficheros cada linea del area DATA tiene ";" antes del "EOL"
+                                          # lo que produce que solo se lea la primera de las lineas de datos
     a <- paste(tmp[1], "DATA=", tmp[2], sep = "")
 
     ## modification by cjgb, 20130228 concerning line separators within quoted strings
