@@ -1,10 +1,16 @@
 Package: pxR
 Type: Package
 Title: PC-Axis with R
-Version: 0.42.0
-Date: 2014-12-22
+Version: 0.42.1
+Date: 2015-02-16
 Encoding: UTF-8
-Authors@R: c(person("Francisco J.",  "Viciana", email= "franciscoj.viciana@juntadeandalucia.es", role='aut'), person("Carlos J.", "Gil Bellosta", email="cgb@datanalytics.com", role=c('cre', 'aut')), person("Oscar", "Perpinan Lamigueiro", email="oscar.perpinan@upm.es", role='aut'), person("Emilio", "Torres Manzanera", email="torres@uniovi.es", role='ctb'), person("Vicente David", "Canto Casasola", email= "vicented.canto.sspa@juntadeandalucia.es", role='ctb'), person("Jorge Ivan", "Velez", email="jorgeivanvelez@gmail.com", role='ctb'))
+Authors@R: c(person("Francisco J.",  "Viciana", email= "franciscoj.viciana@juntadeandalucia.es", role='aut'), 
+             person("Carlos J.", "Gil Bellosta", email="cgb@datanalytics.com", role=c('cre', 'aut')), 
+             person("Oscar", "Perpinan Lamigueiro", email="oscar.perpinan@upm.es", role='aut'), 
+             person("Emilio", "Torres Manzanera", email="torres@uniovi.es", role='ctb'), 
+             person("Vicente David", "Canto Casasola", email= "vicented.canto.sspa@juntadeandalucia.es", role='ctb'), 
+             person("Jorge Ivan", "Velez", email="jorgeivanvelez@gmail.com", role='ctb'))
+Author: Francisco J. Viciana, Carlos J. Gil Bellosta and Oscar Perpiñán Lamigueiro, with contributions from Emilio Torres Manzanera, Vicente David Canto Casasola and Jorge Iván Vélez.
 Maintainer: Carlos J. Gil Bellosta <cgb@datanalytics.com>
 Description: The pxR package provides a set of functions for reading and writing PC-Axis files, used by different statistical organizations around the globe for data dissemination.
 Depends: stringr, reshape2, RJSONIO, plyr

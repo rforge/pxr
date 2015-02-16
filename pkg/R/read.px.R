@@ -25,7 +25,8 @@
 #                               the file itself: if CHARSET="ANSI" then "latin1" else "CP437".
 #               20150212. fvf:  I have to delete => 20130917, cjgb:  tmp[2] <- gsub(";.*", "", tmp[2])    
 #                               many px-files have a semicolon at the end of line in DATA area:
-#                               i.e: read.px('http://www.ine.es/pcaxisdl//t20/e245/p05/a2002/l0/00004001.px')  
+#                               i.e: read.px('http://www.ine.es/pcaxisdl//t20/e245/p05/a2002/l0/00004001.px')
+#               20150216. fvf   minor correction of a bug in the modification: 20150211,fvf
 #################################################################
 
 read.px <- function(filename, encoding = NULL, 
@@ -56,7 +57,7 @@ read.px <- function(filename, encoding = NULL,
     if (is.null(encoding)) {
         charset  <- readLines ( filename, 2 )   # read the 
         charset  <- charset[ grepl( 'CHARSET', charset, ignore.case = T ) ]
-        if ( length(charset) != 1) {
+        if ( length(charset) == 1 & grepl('ANSI', charset, ignore.case =T) ) {
                  encoding <- "latin1"  
         }  else  encoding <- "CP437"  # comprobado en debian y osx
     }

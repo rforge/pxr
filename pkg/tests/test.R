@@ -50,8 +50,7 @@ oo2 <- as.px.array( aa, skeleton.px = oo )
 write.px (oo2, filename='tmp03.px')
  
 ### remove temporal file
-file.remove('tmp04.px','tmp03.px','tmp02.px','tmp01.px')
- 
+file.remove('tmp03.px','tmp02.px','tmp01.px')
  
  
 opx1 <- read.px(  system.file( "extdata", "example.px", package = "pxR")  )  
@@ -61,6 +60,10 @@ opx2 <- read.px  ('opx.px')        #  read  the copy
 as.array(opx1)-> a1
 as.array(opx2)-> a2
 sum(a1-a2)
- 
-opx2 <- read.px ('opx.px')        #  read  the copy
+
+
+file.remove('opx.px')
+
+## multiplex ";" in DATA area
+oo <- read.px ('example6.px')        #  read  the copy
 
