@@ -13,6 +13,8 @@ a <- probar.px("example2.px")
 a <- probar.px("example3.px")
 a <- probar.px("example4.px")
 a <- probar.px("example5.px")
+a <- probar.px("example6.px")
+a <- probar.px("example7.px")
 
 
 my.px.object  <- read.px( system.file( "extdata", "example.px", package = "pxR") )

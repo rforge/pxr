@@ -1,7 +1,7 @@
 Package: pxR
 Type: Package
 Title: PC-Axis with R
-Version: 0.42.1
+Version: 0.42.2
 Date: 2015-02-16
 Encoding: UTF-8
 Authors@R: c(person("Francisco J.",  "Viciana", email= "franciscoj.viciana@juntadeandalucia.es", role='aut'), 

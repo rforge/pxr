@@ -27,6 +27,7 @@
 #                               many px-files have a semicolon at the end of line in DATA area:
 #                               i.e: read.px('http://www.ine.es/pcaxisdl//t20/e245/p05/a2002/l0/00004001.px')
 #               20150216. fvf   minor correction of a bug in the modification: 20150211,fvf
+#               20150219. fvf   Solving a bug: a missing "DROP=FALSE"  was producing a read error on files with a single key
 #################################################################
 
 read.px <- function(filename, encoding = NULL, 
@@ -168,7 +169,7 @@ read.px <- function(filename, encoding = NULL,
       ## extract and process the keys part (it needs to be staked a number of times, 
       ##  as many as there are entries in the data vector in each row in the block)
       keys.part <- raw[, -ncol(raw), drop = FALSE]    
-      keys.part <- keys.part[ rep(1:nrow(keys.part), each = length(data.part) / nrow(keys.part) ), ]
+      keys.part <- keys.part[ rep(1:nrow(keys.part), each = length(data.part) / nrow(keys.part) ), , drop = FALSE ]
       colnames(keys.part) <- names(px$KEYS)
       
       ## change CODES (if any) in keys part to VALUES (consistency issue)
