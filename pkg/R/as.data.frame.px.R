@@ -15,13 +15,6 @@
 
 as.data.frame.px <- function( x, ..., use.codes = FALSE, warnings.as.errors = TRUE, direction = "long"){
 
-  # stores the user settings and resets them on exit
-#   initial.warning.option <- options("warn")$warn
-#   on.exit( options(warn=initial.warning.option) )   
-# 
-#   if ( warnings.as.errors )
-#     options(warn=2)
-  
   dat <- x$DATA$value  # already a data frame
   
   ## maybe we need to change values to codes
