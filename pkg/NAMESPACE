@@ -1,6 +1,6 @@
 importFrom("reshape2", acast, dcast)
-importFrom("stringr", str_split)
-importFrom("plyr", mapvalues)
+importFrom("stringr", str_split, str_locate_all, str_sub, str_length)
+importFrom("plyr", mapvalues, ldply)
 import("RJSONIO")
 
 export( read.px )
@@ -13,10 +13,3 @@ export( write.json.stat )
 S3method(as.data.frame, px)
 S3method(as.array, px)
 S3method(summary, px)
-
-#S3method( as.px, array )
-
-##import()
-##export()
-##exportMethods()
-##exportClas)
