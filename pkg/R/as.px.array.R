@@ -8,82 +8,61 @@
 #
 # Modifications:
 #                 [130624] fvf: Check consistency between CODES and VALUES
+#                 20150701 cjgb: eliminate check for array: it is an array because of dispatching  
 #
 #################################################################
 
 
-as.px.array  <- function ( x, skeleton.px = NULL, list.keys = NULL, ...  )
-# skeleton.px = Utiliza un objeto px preexistente para heredar sus claves,
-#               menos: STUB,HEADING,VALUES (y habra que implementar CODES)
-# listkey     = Admite una lista con pares (key = value), que se puede
-#               utilizar para rellenar claves obligatorias y no obligatorias.
-#               Recomendable:
-#                   list(MATRIX='filename', CONTENTS='unknown', CONTEXTS='unknown',
-#                        UNITS='unknown', TITLE='Title unknown', DECIMAL','0')
-#
-# Pruebas:
-# x<-aa
-# skeleton.px <- oo
-# skeleton.px <- NULL
-# list.keys= list(MATRIX='xxxx', CONTENTS='cosas', MIA='prueba',
-#                 UNITS='personas', TITLE='titulos', DECIMAL='1') -> list.keys
-{
-  if ( ! is.array (x) )
-    stop('Error: object is not a "array"')
-  
-  
+as.px.array  <- function ( x, skeleton.px = NULL, list.keys = NULL, ...  ){
+
   ## auxiliary functions
   
-  mkl1 <- function (key, value)         {
-    zz <- list( list(value=value) )
-    names( zz ) <- key
+  mkl1 <- function(key, value){
+    zz <- list(list(value = value))
+    names(zz) <- key
     zz
   }
   
   ## default skeleton
   
-  if ( is.null( opx <- skeleton.px ) )
-    opx <- c( mkl1( 'CHARSET','ANSI'),
-              mkl1( 'MATRIX','file000'),
-              mkl1( 'AXIS-VERSION','2000'),
-              mkl1( 'SUBJECT-CODE','xx'),
-              mkl1( 'SUBJECT-AREA','unknown'),
-              mkl1( 'CONTENTS'    ,'unknown'),
-              mkl1( 'UNITS'       ,'unknown'),
-              mkl1( 'TITLE'       ,'Title unknown'),
-              mkl1( 'DECIMALS', 0),
-              mkl1( 'CREATION-DATE', format(Sys.time(), "%Y%m%d %H:%M:%S")),
-              mkl1( 'LAST-UPDATED', format(Sys.time(), "%Y%m%d %H:%M:%S"))  )
+  if (is.null(opx <- skeleton.px))
+    opx <- c( mkl1('CHARSET'      , 'ANSI'),
+              mkl1('MATRIX'       , 'file000'),
+              mkl1('AXIS-VERSION' , '2000'),
+              mkl1('SUBJECT-CODE' , 'xx'),
+              mkl1('SUBJECT-AREA' , 'unknown'),
+              mkl1('CONTENTS'     , 'unknown'),
+              mkl1('UNITS'        , 'unknown'),
+              mkl1('TITLE'        , 'Title unknown'),
+              mkl1('DECIMALS'     , 0),
+              mkl1('CREATION-DATE', format(Sys.time(), "%Y%m%d %H:%M:%S")),
+              mkl1('LAST-UPDATED' , format(Sys.time(), "%Y%m%d %H:%M:%S"))  
+              )
 
-  
-  
   ## Add key-value pair if list.keys<>NULL
   if (! is.null(list.keys)) 
     for (key in names(list.keys))
-      opx[key] <- list( list(value = list.keys[[key]]) )
+      opx[key] <- list(list(value = list.keys[[key]]))
       
-  
   # delete STUB, HEADING, VALUES and DATA if present
   opx['STUB'] <- opx['HEADING'] <- opx['VALUES'] <- opx['DATA'] <- NULL
   
   dd <- length(dim(x))
   if (dd > 1) {
     # First dim to 'header', the rest in reverse order
-    opx[["STUB"]]    <- list( value = rev(names(dimnames(x))[2:dd] ) )
-    opx[["HEADING"]] <- list( value = names(dimnames(x))[1]) 
+    opx[["STUB"]]    <- list(value = rev(names(dimnames(x))[2:dd]))
+    opx[["HEADING"]] <- list(value = names(dimnames(x))[1]) 
   } 
   else 
-    opx[["STUB"]] <- list( value = rev(names(dimnames(x)) ))  # Only one dim
+    opx[["STUB"]] <- list(value = rev(names(dimnames(x))))  # Only one dim
   
   opx$VALUES      <- dimnames(x)
   opx$DATA$value  <- as.data.frame(ftable(x))
   colnames(opx$DATA$value) <- c(names(dimnames(x)), "value")
   
-  
-  
   #  Delete skeleton.px$CODES: unused or inconsistent
   
-  if ( ! is.null(opx$CODES) ) {
+  if (! is.null(opx$CODES)){
     
     new.codes <- opx$CODES
     opx$CODES <- list()
@@ -96,13 +75,11 @@ as.px.array  <- function ( x, skeleton.px = NULL, list.keys = NULL, ...  )
       ]
     
     opx$CODES <- new.codes
-    
   }
   
   class( opx ) <- "px"
   
   opx
-
 }
 
 # ### example

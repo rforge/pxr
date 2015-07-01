@@ -21,7 +21,7 @@
 }
 
 \arguments{
-  \item{x}{An array with the data required to build the \code{px} object}
+  \item{x}{An array or \code{data.frame} with the data required to build the \code{px} object}
   \item{skeleton.px}{A \code{px} object with metadata that will be used in the new \code{px} object}
   \item{list.keys}{A optional list of metadata pairs}
   \item{value.column}{Optional name to numeric value column in data.frame; defaults to "value"}    
