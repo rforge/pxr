@@ -52,12 +52,13 @@ write.px <- function ( obj.px, filename, heading = NULL, stub = NULL,
   if (!is.null(keys)) {
     obj.px$KEYS <- NULL  ## Redefine KEYS si existen
                          ## CODES si hay, si no VALUES
+    
     if ( ! all(keys %in% names(obj.px$VALUES)))    {
-        c('!! Error Somme keys are not in VALUES !! ')
+        c('Error: Some keys are not in VALUES')
     }
     
-    
-    lapply(keys,function(e) { 'VALUES' })-> kk ;  names(kk)<- keys    
+    kk <- lapply(keys,function(e) { 'VALUES' })
+    names(kk) <- keys    
     for (i in keys[keys %in% names(obj.px$COD)]) {
       kk[[i]]<- 'CODES'
       levels(obj.px$DATA[[1]][,i]) <- obj.px$CODES[[i]]
@@ -115,10 +116,10 @@ write.px <- function ( obj.px, filename, heading = NULL, stub = NULL,
     obj.px$STUB$value    <- stub
   }
 
-  # If thera are key:"KEYS"  then 
+  # If there is a "KEYS" key, then 
   # change HEADING and STUB to fit KEYS
 
-   if (! is.null(obj.px$KEYS)) {
+  if (! is.null(obj.px$KEYS)) {
         
     keys    <- names(obj.px$KEYS)
     values  <- names(obj.px$VALUES)    
@@ -132,9 +133,6 @@ write.px <- function ( obj.px, filename, heading = NULL, stub = NULL,
   con <- file( description = filename, open = "w", encoding = fileEncoding )
   on.exit(close(con))
   
-  ## write new file 
-  #cat('', file = con, append = F) # init file
-  
   ## metadata part
   for (key in new.order ) {
 
@@ -145,7 +143,7 @@ write.px <- function ( obj.px, filename, heading = NULL, stub = NULL,
     # e.g.: 'DECIMALS=0;'
      ## ELIMINATION("~~~~")=YES is a diferente exceptions fvf: (20141222)
     
-    if( key %in% c('DECIMALS', 'SHOWDECIMALS', 
+    if (key %in% c('DECIMALS', 'SHOWDECIMALS', 
                    'COPYRIGHT', 'DESCRIPTIONDEFAULT', 'DAYADJ', 'SEASADJ')){
       wf( key, "=")
       wf( unquote(obj.px[[key]]$value) )
@@ -164,15 +162,17 @@ write.px <- function ( obj.px, filename, heading = NULL, stub = NULL,
     
     # meta with second name; there can be more than one
     for (subkey in names(obj.px[[key]])){
-      wf ( key, '("', subkey, '")=' )
+      wf( key, '("', subkey, '")=' )
+      
       # ELIMINATION is here: fvf (20141222)
-      if   (key =='ELIMINATION') {
-         if (obj.px$ELIMINATION[[subkey]] %in% c('YES','NO')) 
-            wf(obj.px$ELIMINATION[[subkey]]) 
-         else
-           wf ( paste( requote( obj.px[[key]][[subkey]] ), collapse = ',') ) 
-      } else if  (key =='KEYS' )   wf( paste( obj.px[[key]][[subkey]],';',sep=''))
-      else  wf ( paste( requote( obj.px[[key]][[subkey]] ), collapse = ',') )
+      # for some keys, it uses quotes; for others (YES/NO), it does not.
+      # KEYS is another exception: the argument is not quoted
+            
+      if ( (key =='ELIMINATION' && obj.px[[key]][[subkey]] %in% c('YES','NO')) || key == 'KEYS' )
+          wf(obj.px[[key]][[subkey]]) 
+        else
+          wf(paste(requote(obj.px[[key]][[subkey]]), collapse = ',')) 
+
       wf ( ';\n' )              
     }     
   }
@@ -181,16 +181,16 @@ write.px <- function ( obj.px, filename, heading = NULL, stub = NULL,
   
   wf('DATA=\n')
   
-  if (! is.null(obj.px$KEYS)) {
+  if (!is.null(obj.px$KEYS)) {
     
      keys   <- names(obj.px$KEYS)
      values <- names(obj.px$VALUES)
      
      fm <- formula( paste(  
-              paste(keys,collapse = '+'),'~', 
-              paste(values[!values %in% keys],collapse = '+'),sep='') )    
+              paste(keys, collapse = '+'),'~', 
+              paste(values[!values %in% keys], collapse = '+'), sep=''))    
     
-     #  levels KEYS to CODES or VALUES:
+     # levels KEYS to CODES or VALUES:
      for (i in keys) {
        if (obj.px$KEYS[[i]]=='CODES') {
          levels(obj.px$DATA[[1]][,i]) <- obj.px$CODES[[i]] 
@@ -198,61 +198,38 @@ write.px <- function ( obj.px, filename, heading = NULL, stub = NULL,
          levels(obj.px$DATA[[1]][,i]) <- obj.px$VALUES[[i]]        
      }
           
+     res <- dcast(obj.px$DATA[[1]], fm, sum)    # keys first, then data in columns
+     with.data <- rep(TRUE, nrow(res))          # rows to keep
      
-     obj.px$DATA[[1]] <- dcast(obj.px$DATA[[1]],fm,sum)   # reciclo memory
+     no.keys <- names(res)[!names(res) %in% keys]   # columns with no keys
      
-     with.data <- rep(TRUE,length(obj.px$DATA[[1]][,1]))
+     data.no.keys <- as.matrix(res[,no.keys])
      
-     no.keys <- names(obj.px$DATA[[1]])[!names(obj.px$DATA[[1]]) %in% keys] 
+     if (!write.na)
+       with.data <- with.data & ! apply(data.no.keys, 1, function(x) all(is.na(x)))
+     if (!write.zero)
+       with.data <- with.data & ! apply(data.no.keys, 1, function(x) all(x == 0))
+ 
+     res <- res[with.data, ]   
      
-     if ( ! write.na) {
-       
-         kk2 <- as.matrix(obj.px$DATA[[1]][,no.keys])
-         kk2[] <-  ! is.na(kk2[])
-         
-         with.data <-  rowSums(kk2) > 0 # delete if all NA
-         
-     }
-     if ( ! write.zero) {
-       
-        kk2 <- as.matrix(obj.px$DATA[[1]][,no.keys])
-        kk2[] <-  (!kk2[]==0)
-       
-        with.data <-  rowSums(kk2)  > 0 # delete if all cero
-     }
-     
-     if ( (! write.na) & (! write.zero) ) {
-       kk2 <- as.matrix(obj.px$DATA[[1]][,no.keys])
-       kk2[] <-  ! (is.na(kk2[]) |  kk2[]==0 )   
-       
-       with.data <-  rowSums(kk2)  > 0 # delete if all cero
-       
-     }
-     
-     obj.px$DATA[[1]] <- obj.px$DATA[[1]][with.data, ]    # delete Rows without data
-     
-     rm(kk2)                                              # preserve memory
-     
-     zz<- obj.px$DATA[[1]][,keys[1]] 
-     
-     
-     
+     zz <- res[, keys[1]] 
+
      for (i in keys[-1]) {
-       zz<-paste(zz,obj.px$DATA[[1]][,i],sep='","')
-       
+       zz <- paste(zz, res[,i],sep='","')
      }
      
      zz <- paste('"',zz,'",',sep='')
-     for (i in names(obj.px$DATA[[1]])[!names(obj.px$DATA[[1]]) %in% keys] ) {
-        colum.num <- formatC(obj.px$DATA[[1]][,i],
+     
+     
+     for (i in names(res)[!names(res) %in% keys] ) {
+        column.num <- formatC(res[,i],
                         format = 'f',
                         digits = as.numeric(obj.px$DECIMALS$value),
                         drop0trailing = T, flag = '-')
-        colum.num <- gsub("NA", '".."', colum.num)        
-        zz<-paste(zz,colum.num,sep=' ')
+        column.num <- gsub("NA", '".."', column.num)        
+        zz <- paste(zz, colum.num, sep=' ')
         
      }
-    
     
      write(zz, file = con, ncolumns = 1, append = T )
      
@@ -269,7 +246,6 @@ write.px <- function ( obj.px, filename, heading = NULL, stub = NULL,
   
   wf(";\n")
   
-  return(paste(filename,'was created'))
-  
+  invisible(NULL)
 }  
 

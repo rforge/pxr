@@ -20,12 +20,10 @@ as.px.data.frame <- function(x, skeleton.px = NULL, list.keys = NULL,
   value.column <- ifelse(is.null(value.column), "value", value.column)
   if (! value.column %in% colnames(x))
     stop("Error: Column ", value.column, "not found in ", deparse(substitute(x)))
-
-  my.dim.names <- colnames(x)[colnames(x) != value.column]
-  my.formula   <- as.formula(paste(my.dim.names, collapse = "~"))   # eg. sexo ~ edad ~ provincia
   
-  x.array <- acast(x, my.formula, value.var = value.column, fun.aggregate = mean)
-  names(dimnames(x.array)) <- my.dim.names
+  dim.names <- setdiff(colnames(x), value.column)
+  x.array   <- acast(x, as.list(dim.names))
+  names(dimnames(x.array)) <- dim.names
   
   as.px(x.array, skeleton.px = skeleton.px, list.keys = list.keys, ...) 
 }

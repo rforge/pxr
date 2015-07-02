@@ -27,7 +27,7 @@
 #                               many px-files have a semicolon at the end of line in DATA area:
 #                               i.e: read.px('http://www.ine.es/pcaxisdl//t20/e245/p05/a2002/l0/00004001.px')
 #               20150216. fvf   minor correction of a bug in the modification: 20150211,fvf
-#               20150219. fvf   Solving a bug: a missing "DROP=FALSE"  was producing a read error on files with a single key
+#               20150219. fvf   Solving a bug: a missing "DROP=FALSE" was producing a read error on files with a single key
 #################################################################
 
 read.px <- function(filename, encoding = NULL, 
@@ -56,22 +56,18 @@ read.px <- function(filename, encoding = NULL,
     # modification by  fvf (150211): Determining the character encoding used in the file => encoding
     
     if (is.null(encoding)) {
-        charset  <- readLines ( filename, 2 )   # read the 
-        charset  <- charset[ grepl( 'CHARSET', charset, ignore.case = T ) ]
-        if ( length(charset) == 1 & grepl('ANSI', charset, ignore.case =T) ) {
-                 encoding <- "latin1"  
-        }  else  encoding <- "CP437"  # comprobado en debian y osx
+        charset  <- readLines( filename, 2)   # read the first two lines
+        encoding <- ifelse(any(grepl('CHARSET.*ANSI', charset, ignore.case = T)), 
+                           "latin1", "CP437")  # comprobado en debian y osx
     }
 
     a <- scan(filename, what = "character", sep = "\n", quiet = TRUE, fileEncoding = encoding)
 
     # modification by  fvf: 130608 
-    a <- paste(a, collapse = "\n")       # Se mantienen "CR/LF luego se quitaran selectivamente
+    a <- paste(a, collapse = "\n")        # Se mantienen "CR/LF luego se quitaran selectivamente
 
     tmp <- strsplit( a, "DATA=" )[[1]]
-    tmp[1] <- gsub("\n", " ", tmp[1])    # fvf[130608]: elimina CR de la cabecera
-    
-    # tmp[2] <- gsub(";.*", "", tmp[2])   # removing ";" (and everything following it) within DATA number strings     
+    tmp[1] <- gsub("\n", " ", tmp[1])     # fvf[130608]: elimina CR de la cabecera
     tmp[2] <- gsub(";", "", tmp[2])       # fvf[150212] (la modificacion rev 92 a 94) da multiples problemas en INEBase                                          
                                           # i.e: read.px('http://www.ine.es/pcaxisdl//t20/e245/p05/a2002/l0/00004001.px')
                                           # en muchos ficheros cada linea del area DATA tiene ";" antes del "EOL"
@@ -104,9 +100,8 @@ read.px <- function(filename, encoding = NULL,
     a <- do.call(rbind, str_split(a, "=", n = 2))   
 
     ## fvf.20141222: not chage to factor: ++ stringsAsFactors=F)
-    a <- data.frame(cbind(get.attributes(a[, 1]), a[, 2], stringsAsFactors=F) )
+    a <- data.frame(cbind(get.attributes(a[, 1]), a[, 2], stringsAsFactors=F))
 
-    
     colnames(a) <- c("label", "attribute", "value")
   
     ## build a px object: list with px class attribute ##  
@@ -131,22 +126,18 @@ read.px <- function(filename, encoding = NULL,
 
     px$VALUES <- lapply(px$VALUES, break.clean)
 
-    # fvf.20141222: if  there aren not  CODES do not create CODES
-    if (!is.null(px$CODES)) {
-       px$CODES <- lapply(px$CODES, break.clean) }
+    # fvf.20141222: if there are not CODES, do not create CODES
+    if (!is.null(px$CODES))
+       px$CODES <- lapply(px$CODES, break.clean)
 
     # fvf.20141222: Sustituye ["~~~~" "~~~~~"] por ["~~~~~"\n"~~~~"]  en 
     # campos multilinea con retornos perdidos (simplifica la lectura humana)
  
-    step.string <-  function(e) {
-    if(!is.null(e$value)) {
-        e$value <-  gsub('"[[:space:]]+"', '"\n"', e$value)          
-        e
-      } else e
-    }
-    lapply(px, step.string )  -> px
-
-    
+    px <- lapply(px, function(e){
+      if (!is.null(e$value)) 
+        e$value <- gsub('"[[:space:]]+"', '"\n"', e$value)          
+      e
+    })
     
     #### read the data part into a 'melted' dataframe ###
     
@@ -162,8 +153,8 @@ read.px <- function(filename, encoding = NULL,
       raw <- read.table(tc, sep = ",", colClasses = "factor")
       
       ## extract and process the data part (the numbers)
-      data.part <- as.character( raw[, ncol(raw)] )          # numbers (last column of the data.frame)
-      data.part <- gsub('"-"', 0, data.part)                 # 0's might be encoded as "-"
+      data.part <- as.character(raw[, ncol(raw)] )          # numbers (last column of the data.frame)
+      data.part <- gsub('"-"', 0, data.part)                # 0's might be encoded as "-"
       data.part <- scan(text = data.part, na.strings = na.strings, quiet = T)
       
       ## extract and process the keys part (it needs to be staked a number of times, 
@@ -178,16 +169,16 @@ read.px <- function(filename, encoding = NULL,
       #                                     from = px$CODES[[col.name]], 
       #                                     to   = px$VALUES[[col.name]])
       # fvf.20141222:
-      for (col.name in colnames(keys.part) ) {
-            if (px$KEYS[[col.name]]=='CODES')   {            
-                  keys.part[[col.name]]  <- factor(keys.part[[col.name]],levels= px$CODES[[col.name]] ) 
-                  levels(keys.part[[col.name]]) <- px$VALUES[[col.name]]  ## all levels a VALUES
-            } else  keys.part[[col.name]]  <- factor(keys.part[[col.name]],levels= px$VALUES[[col.name]] )           
+      for (col.name in colnames(keys.part)){
+        if (px$KEYS[[col.name]] == 'CODES')   {            
+          keys.part[[col.name]]  <- factor(keys.part[[col.name]], levels = px$CODES[[col.name]]) 
+          levels(keys.part[[col.name]]) <- px$VALUES[[col.name]]  ## all levels a VALUES
+        } else  keys.part[[col.name]]  <- factor(keys.part[[col.name]], levels = px$VALUES[[col.name]] )           
       }
       
       
       ## extract and process the variables that are not keys
-      no.keys.part <- px$VALUES[ setdiff( names(px$VALUES), names(px$KEYS) ) ]                       
+      no.keys.part <- px$VALUES[setdiff(names(px$VALUES), names(px$KEYS))]                       
       no.keys.part <- expand.grid(rev(no.keys.part))
       
       ## put everything together & cleanup
@@ -203,7 +194,6 @@ read.px <- function(filename, encoding = NULL,
 
       tc  <- textConnection(tmp); on.exit( close(tc) )
       raw <- scan(tc, na.strings = na.strings, quote = NULL, quiet = TRUE)
-      #raw <- scan(tc, na.strings = na.strings, quiet = TRUE)
       
       names.vals <- c( rev(px$HEADING$value), rev( px$STUB$value ) )
       output.grid <- data.frame(do.call(expand.grid, px$VALUES[names.vals]))

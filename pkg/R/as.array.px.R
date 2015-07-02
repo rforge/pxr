@@ -23,7 +23,6 @@ as.array.px <- function(x, use.codes = FALSE,... ){
   res       <- acast(df, as.list( dim.names ))
   names( dimnames(res) ) <- dim.names
   res
-  
 }
 
 
