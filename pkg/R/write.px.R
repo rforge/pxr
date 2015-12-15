@@ -227,7 +227,7 @@ write.px <- function ( obj.px, filename, heading = NULL, stub = NULL,
                         digits = as.numeric(obj.px$DECIMALS$value),
                         drop0trailing = T, flag = '-')
         column.num <- gsub("NA", '".."', column.num)        
-        zz <- paste(zz, colum.num, sep=' ')
+        zz <- paste(zz, column.num, sep=' ')
         
      }
     
