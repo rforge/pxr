@@ -10,9 +10,9 @@ Authors@R: c(person("Francisco J.",  "Viciana", email= "franciscoj.viciana@junta
              person("Emilio", "Torres Manzanera", email="torres@uniovi.es", role='ctb'), 
              person("Vicente David", "Canto Casasola", email= "vicented.canto.sspa@juntadeandalucia.es", role='ctb'), 
              person("Jorge Ivan", "Velez", email="jorgeivanvelez@gmail.com", role='ctb'))
-Author: Francisco J. Viciana, Carlos J. Gil Bellosta and Oscar Perpiñán Lamigueiro, with contributions from Emilio Torres Manzanera, Vicente David Canto Casasola and Jorge Iván Vélez.
+Author: Francisco J. Viciana, Carlos J. Gil Bellosta and Oscar Perpiñán Lamigueiro, Emilio Torres Manzanera, Vicente David Canto Casasola, and Jorge Iván Vélez.
 Maintainer: Carlos J. Gil Bellosta <cgb@datanalytics.com>
-Description: The pxR package provides a set of functions for reading and writing PC-Axis files, used by different statistical organizations around the globe for data dissemination.
+Description: Provides a set of functions for reading and writing PC-Axis files, used by different statistical organizations around the globe for data dissemination.
 Depends: stringr, reshape2, RJSONIO, plyr
 URL: http://pxr.r-forge.r-project.org/
 License: GPL-3

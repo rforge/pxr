@@ -1,7 +1,12 @@
+#import("RJSONIO")
+
 importFrom("reshape2", acast, dcast)
 importFrom("stringr", str_split, str_locate_all, str_sub, str_length)
 importFrom("plyr", mapvalues, ldply)
-import("RJSONIO")
+importFrom("stats", "formula", "ftable")
+importFrom("utils", "read.table", "str")
+importFrom("RJSONIO", "toJSON")
+
 
 export(read.px)
 export(write.px)
