@@ -35,16 +35,17 @@ write.px <- function ( obj.px, filename, heading = NULL, stub = NULL,
   requote <- function(x)            # adds dquotes (") to character vectors
     paste( '"', unquote(x), '"', sep = "")
     
-  wf  <- function ( ..., my.encoding = ifelse(fileEncoding == "ISO-8859-1", "latin1", fileEncoding) ) {
+  wf <- function(...){
     cadena <- paste(..., sep = "")
-    cadena <- iconv(cadena, to=my.encoding)
-    cat( cadena, file = con, sep = "" ) 
+    #cadena <- iconv(cadena, to = my.encoding)
+    cat(cadena, file = con, sep = "") 
   }
-  ## end - auxiliary functions ##
+  
+  ## end - auxiliary functions
   
   # modify px object providing sensible default values
   obj.px[['LAST.UPDATED']]$value <- format(Sys.time(), "%Y%m%d %H:%M:%S")
-  obj.px[['CHARSET']]$value      <- ifelse( fileEncoding == "ISO-8859-1", 'ANSI', fileEncoding )
+  obj.px[['CHARSET']]$value      <- ifelse(fileEncoding == "ISO-8859-1", 'ANSI', fileEncoding)
   obj.px$INFO$value              <- "File generated using R and package pxR (http://pxr.r-forge.r-project.org/)"
 
   # Using KEYS Allowed: as parameter or object property
@@ -130,7 +131,7 @@ write.px <- function ( obj.px, filename, heading = NULL, stub = NULL,
   }
  
   ## open the connection and close automatically on exit
-  con <- file( description = filename, open = "w", encoding = fileEncoding )
+  con <- file( description = filename, open = "w", encoding = ifelse(fileEncoding == "ISO-8859-1", "latin1", fileEncoding))
   on.exit(close(con))
   
   ## metadata part

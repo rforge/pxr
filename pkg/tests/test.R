@@ -56,7 +56,7 @@ write.px (oo2, filename="tmp03.px")
 ### remove temporal file
 file.remove("tmp03.px","tmp02.px","tmp01.px")
  
-opx1 <- read.px(  system.file( "extdata", "example.px", package = "pxR")  )  
+opx1 <- read.px(system.file( "extdata", "example.px", package = "pxR"))  
 write.px(opx1, filename = "opx.px")  #  write a copy
 opx2 <- read.px("opx.px")        #  read  the copy
  
