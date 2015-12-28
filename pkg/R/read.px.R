@@ -56,7 +56,7 @@ read.px <- function(filename, encoding = NULL,
     # modification by  fvf (150211): Determining the character encoding used in the file => encoding
     
     if (is.null(encoding)) {
-        charset  <- readLines( filename, 2)   # read the first two lines
+        charset  <- readLines(filename, 5)   # read the first five lines
         encoding <- ifelse(any(grepl('CHARSET.*ANSI', charset, ignore.case = T)), 
                            "latin1", "CP437")  # comprobado en debian y osx
     }
